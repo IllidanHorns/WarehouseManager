@@ -1,0 +1,49 @@
+@model WarehouseManager.AdminWeb.ViewModels.Stocks.StockUpdateViewModel
+
+@{
+    ViewData["Title"] = "Изменение остатка";
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <form asp-action="Edit" method="post" class="needs-validation" novalidate>
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Товар</label>
+                    <input class="form-control" value="@Model.ProductName" readonly />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Склад</label>
+                    <input class="form-control" value="@Model.WarehouseAddress" readonly />
+                </div>
+            </div>
+
+            <div class="row g-3 mt-0">
+                <div class="col-md-4">
+                    <label asp-for="Quantity" class="form-label"></label>
+                    <input asp-for="Quantity" class="form-control" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
+            }
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <a asp-action="Index" class="btn btn-outline-secondary">Отмена</a>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

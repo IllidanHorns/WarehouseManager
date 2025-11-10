@@ -1,0 +1,40 @@
+@model WarehouseManager.AdminWeb.ViewModels.Account.LoginViewModel
+@{
+    ViewData["Title"] = "Авторизация";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    var returnUrl = ViewData["ReturnUrl"] as string ?? Url.Action("Index", "Home");
+}
+
+<div class="auth-container">
+    <div class="auth-card">
+        <h2 class="text-center mb-4">Вход в административную панель</h2>
+
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <div class="alert alert-danger">@Model.ErrorMessage</div>
+        }
+
+        <form asp-action="Login" method="post">
+            <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" autocomplete="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Войти</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

@@ -1,0 +1,209 @@
+<UserControl x:Class="WarehouseManager.Wpf.View.PriceHistoryPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="800"
+             d:DesignWidth="1200">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="История изменения цен"
+                   Grid.Row="0"
+                   FontSize="28"
+                   FontWeight="Bold"
+                   Foreground="#123C69"
+                   Margin="0,0,0,16"/>
+
+        <Border Grid.Row="1"
+                Background="#EEE2DC"
+                CornerRadius="8"
+                Padding="16"
+                Margin="0,0,0,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="Название товара:" Foreground="#123C69" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox Width="220"
+                             Text="{Binding ProductNameFilter, UpdateSourceTrigger=PropertyChanged}"
+                             Background="Transparent"
+                             Foreground="#123C69"
+                             BorderBrush="#BAB2B5"
+                             BorderThickness="1"
+                             Margin="0,0,16,0"/>
+
+                    <TextBlock Text="Категория:" Foreground="#123C69" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox ItemsSource="{Binding Categories}"
+                                  SelectedItem="{Binding SelectedCategory}"
+                                  DisplayMemberPath="Name"
+                                  Width="220"
+                                  Background="#EEE2DC"
+                                  Foreground="#123C69"
+                                  BorderBrush="#BAB2B5"
+                                  BorderThickness="1"/>
+                        <Button Content="Очистить"
+                                Command="{Binding ClearCategoryFilterCommand}"
+                                Margin="8,0,0,0"
+                                Padding="16,6"
+                                Background="#AC3B61"
+                                Foreground="#EEE2DC"
+                                BorderBrush="#BAB2B5"
+                                Cursor="Hand"
+                                Visibility="{Binding IsCategorySelected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                    <Button Content="Поиск"
+                            Command="{Binding FilterCommand}"
+                            Padding="24,12"
+                            Margin="16,0,0,0"
+                            Background="#123C69"
+                            Foreground="#EEE2DC"
+                            BorderBrush="#BAB2B5"
+                            BorderThickness="2"
+                            Cursor="Hand"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <TextBlock Grid.Row="2"
+                   Text="{Binding ErrorMessage}"
+                   Foreground="#AC3B61"
+                   Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"
+                   Margin="0,0,0,8"/>
+
+        <Border Grid.Row="3"
+                Background="#EEE2DC"
+                CornerRadius="8"
+                Padding="16">
+            <DataGrid ItemsSource="{Binding PriceHistories}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserReorderColumns="True"
+                      CanUserResizeColumns="True"
+                      HeadersVisibility="Column"
+                      IsReadOnly="True"
+                      Background="#EEE2DC"
+                      Foreground="#123C69"
+                      BorderThickness="0"
+                      GridLinesVisibility="None"
+                      RowBackground="#EDC7B7"
+                      AlternatingRowBackground="#F4D4C4"
+                      SelectionUnit="FullRow"
+                      SelectionMode="Single">
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="#123C69"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                        <Setter Property="BorderBrush" Value="#D8C3A5"/>
+                        <Setter Property="Padding" Value="0,0,0,8"/>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Дата изменения"
+                                        Binding="{Binding UpdateDatetime, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}"
+                                        Width="200"/>
+                    <DataGridTextColumn Header="Товар"
+                                        Binding="{Binding ProductName}"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="Категория"
+                                        Binding="{Binding CategoryName}"
+                                        Width="220"/>
+                    <DataGridTextColumn Header="Старая цена"
+                                        Binding="{Binding OldPrice, StringFormat='{}{0:F2} ₽'}"
+                                        Width="140"/>
+                    <DataGridTextColumn Header="Новая цена"
+                                        Binding="{Binding NewPrice, StringFormat='{}{0:F2} ₽'}"
+                                        Width="140"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <Grid Grid.Row="4" Margin="0,16,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Foreground="#123C69">
+                <Run Text="Страница"/>
+                <Run Text="{Binding CurrentPage}"/>
+                <Run Text=" из "/>
+                <Run Text="{Binding TotalPages}"/>
+                <Run Text=" (Всего: "/>
+                <Run Text="{Binding TotalCount}"/>
+                <Run Text=")"/>
+            </TextBlock>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
+                    <TextBlock Text="Строк на странице: "
+                               Foreground="#123C69"
+                               VerticalAlignment="Center"
+                               Margin="0,0,8,0"/>
+                    <ComboBox Width="80"
+                              SelectedItem="{Binding PageSize, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding AvailablePageSizes}"
+                              Background="#EEE2DC"
+                              Foreground="#123C69"
+                              BorderBrush="#BAB2B5"
+                              BorderThickness="1"/>
+                </StackPanel>
+
+                <Button Content="◄ Назад"
+                        Command="{Binding PreviousPageCommand}"
+                        IsEnabled="{Binding CurrentPage, Converter={StaticResource GreaterThanOneConverter}}"
+                        Padding="16,8"
+                        Margin="0,0,8,0"
+                        Background="#123C69"
+                        Foreground="#EEE2DC"
+                        BorderBrush="#BAB2B5"
+                        Cursor="Hand"/>
+                <Button Content="Вперёд ►"
+                        Command="{Binding NextPageCommand}"
+                        Padding="16,8"
+                        Background="#123C69"
+                        Foreground="#EEE2DC"
+                        BorderBrush="#BAB2B5"
+                        Cursor="Hand">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{StaticResource LessThanTotalPagesConverter}">
+                            <Binding Path="CurrentPage"/>
+                            <Binding Path="TotalPages"/>
+                        </MultiBinding>
+                    </Button.IsEnabled>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="3"
+                Background="#80000000"
+                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                Panel.ZIndex="1000">
+            <TextBlock Text="Загрузка..."
+                       Foreground="White"
+                       FontSize="20"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
+</UserControl>

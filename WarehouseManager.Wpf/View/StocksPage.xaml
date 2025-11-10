@@ -1,0 +1,272 @@
+<UserControl x:Class="WarehouseManager.Wpf.View.StocksPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1200">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Text="Управление остатками на складах"
+                   Grid.Row="0"
+                   FontSize="28"
+                   FontWeight="Bold"
+                   Foreground="#123C69"
+                   Margin="0,0,0,16"/>
+
+        <!-- Панель фильтров и кнопка добавления -->
+        <Grid Grid.Row="1" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Фильтры -->
+            <Border Grid.Column="0"
+                    Background="#EEE2DC"
+                    CornerRadius="8"
+                    Padding="12"
+                    Margin="0,0,16,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ScrollViewer Grid.Column="0" 
+                                  HorizontalScrollBarVisibility="Auto" 
+                                  VerticalScrollBarVisibility="Disabled">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Название продукта:"
+                                       Foreground="#123C69"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,8,0"/>
+                            <TextBox Text="{Binding ProductNameFilter, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="200"
+                                     Foreground="#123C69"
+                                     Background="Transparent"
+                                     BorderBrush="#BAB2B5"
+                                     BorderThickness="1"
+                                     CaretBrush="#123C69"
+                                     Margin="0,0,16,0"/>
+
+                            <TextBlock Text="Адрес склада:"
+                                       Foreground="#123C69"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,8,0"/>
+                            <TextBox Text="{Binding WarehouseAddressFilter, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="200"
+                                     Foreground="#123C69"
+                                     Background="Transparent"
+                                     BorderBrush="#BAB2B5"
+                                     BorderThickness="1"
+                                     CaretBrush="#123C69"
+                                     Margin="0,0,16,0"/>
+
+                            <TextBlock Text="Продукт:"
+                                       Foreground="#123C69"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,8,0"/>
+                            <ComboBox SelectedValue="{Binding SelectedProductId}"
+                                      DisplayMemberPath="Name"
+                                      SelectedValuePath="Id"
+                                      ItemsSource="{Binding Products}"
+                                      Width="200"
+                                      Background="#EEE2DC"
+                                      Foreground="#123C69"
+                                      BorderBrush="#BAB2B5"
+                                      BorderThickness="1"
+                                      Margin="0,0,16,0"/>
+
+                            <TextBlock Text="Склад:"
+                                       Foreground="#123C69"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,8,0"/>
+                            <ComboBox SelectedValue="{Binding SelectedWarehouseId}"
+                                      DisplayMemberPath="Address"
+                                      SelectedValuePath="Id"
+                                      ItemsSource="{Binding Warehouses}"
+                                      Width="200"
+                                      Background="#EEE2DC"
+                                      Foreground="#123C69"
+                                      BorderBrush="#BAB2B5"
+                                      BorderThickness="1"
+                                      Margin="0,0,16,0"/>
+
+                            <Button Content="Поиск"
+                                    Command="{Binding FilterCommand}"
+                                    Margin="8,0,0,0"
+                                    Padding="16,8"
+                                    Background="#123C69"
+                                    Foreground="#EEE2DC"
+                                    BorderBrush="#BAB2B5"
+                                    Cursor="Hand"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <!-- Кнопка добавления -->
+            <Button Grid.Column="1"
+                    Content="Добавить остаток"
+                    Command="{Binding OpenCreateWindowCommand}"
+                    Padding="24,12"
+                    FontSize="16"
+                    Background="#123C69"
+                    Foreground="#EEE2DC"
+                    BorderBrush="#BAB2B5"
+                    BorderThickness="2"
+                    Cursor="Hand">
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
+                                                To="#AC3B61" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
+                                                To="#123C69" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Button.Triggers>
+            </Button>
+        </Grid>
+
+        <!-- Сообщение об ошибке -->
+        <TextBlock Text="{Binding ErrorMessage}"
+                   Grid.Row="1"
+                   Foreground="#AC3B61"
+                   Margin="0,80,0,0"
+                   TextWrapping="Wrap"
+                   Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"/>
+
+        <!-- Список остатков -->
+        <Border Grid.Row="2"
+                Background="#EEE2DC"
+                CornerRadius="8"
+                Padding="16">
+            <ListView x:Name="StocksListView"
+                      ItemsSource="{Binding Stocks}"
+                      Style="{StaticResource TableListViewStyle}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource TableListViewItemStyle}">
+                        <EventSetter Event="MouseDoubleClick" Handler="StocksListViewItem_DoubleClick"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView AllowsColumnReorder="True"
+                              ColumnHeaderContainerStyle="{StaticResource TableGridViewColumnHeaderStyle}">
+                        <GridViewColumn Header="Продукт" Width="260"
+                                        DisplayMemberBinding="{Binding ProductName}"/>
+                        <GridViewColumn Header="Склад" Width="260"
+                                        DisplayMemberBinding="{Binding WarehouseAddress}"/>
+                        <GridViewColumn Header="Количество" Width="140"
+                                        DisplayMemberBinding="{Binding Quantity}"/>
+                        <GridViewColumn Header="Действия" Width="160">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Обновить"
+                                            Command="{Binding DataContext.OpenUpdateWindowCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            CommandParameter="{Binding}"
+                                            Padding="12,6"
+                                            Background="#123C69"
+                                            Foreground="#EEE2DC"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"
+                                            FontSize="12"
+                                            Cursor="Hand"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Border>
+
+        <!-- Пагинация -->
+        <Grid Grid.Row="3" Margin="0,16,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Foreground="#123C69">
+                <Run Text="Страница"/>
+                <Run Text="{Binding CurrentPage}"/>
+                <Run Text=" из "/>
+                <Run Text="{Binding TotalPages}"/>
+                <Run Text=" (Всего: "/>
+                <Run Text="{Binding TotalCount}"/>
+                <Run Text=")"/>
+            </TextBlock>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
+                    <TextBlock Text="Строк на странице: " 
+                               Foreground="#123C69" 
+                               VerticalAlignment="Center"
+                               Margin="0,0,8,0"/>
+                    <ComboBox Width="80"
+                              SelectedItem="{Binding PageSize, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding AvailablePageSizes}"
+                              Background="#EEE2DC"
+                              Foreground="#123C69"
+                              BorderBrush="#BAB2B5"
+                              BorderThickness="1"/>
+                </StackPanel>
+                
+                <Button Content="◄ Назад"
+                        Command="{Binding PreviousPageCommand}"
+                        IsEnabled="{Binding CurrentPage, Converter={StaticResource GreaterThanOneConverter}}"
+                        Padding="16,8"
+                        Margin="0,0,8,0"
+                        Background="#123C69"
+                        Foreground="#EEE2DC"
+                        BorderBrush="#BAB2B5"
+                        Cursor="Hand"/>
+                <Button Content="Вперёд ►"
+                        Command="{Binding NextPageCommand}"
+                        Padding="16,8"
+                        Margin="0,0,8,0"
+                        Background="#123C69"
+                        Foreground="#EEE2DC"
+                        BorderBrush="#BAB2B5"
+                        Cursor="Hand">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{StaticResource LessThanTotalPagesConverter}">
+                            <Binding Path="CurrentPage"/>
+                            <Binding Path="TotalPages"/>
+                        </MultiBinding>
+                    </Button.IsEnabled>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- Индикатор загрузки -->
+        <Border Grid.Row="2"
+                Background="#80000000"
+                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                Panel.ZIndex="1000">
+            <TextBlock Text="Загрузка..."
+                       Foreground="White"
+                       FontSize="20"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
+</UserControl>
+

@@ -1,0 +1,21 @@
+@model WarehouseManager.AdminWeb.ViewModels.Warehouses.WarehouseFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<div class="mb-3">
+    <label asp-for="Address" class="form-label"></label>
+    <textarea asp-for="Address" class="form-control" rows="3"></textarea>
+    <span asp-validation-for="Address" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Square" class="form-label"></label>
+    <input asp-for="Square" class="form-control" />
+    <span asp-validation-for="Square" class="text-danger"></span>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+

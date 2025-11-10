@@ -1,0 +1,27 @@
+@model WarehouseManager.AdminWeb.ViewModels.Employees.EmployeeFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="UserId" class="form-label"></label>
+        <select asp-for="UserId" asp-items="Model.AvailableUsers" class="form-select"></select>
+        <span asp-validation-for="UserId" class="text-danger"></span>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="Salary" class="form-label"></label>
+        <input asp-for="Salary" class="form-control" />
+        <span asp-validation-for="Salary" class="text-danger"></span>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="DateOfBirth" class="form-label"></label>
+        <input asp-for="DateOfBirth" class="form-control" type="date" />
+        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
+}
+
