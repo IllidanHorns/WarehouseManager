@@ -101,7 +101,6 @@ public class StockService : ReadOnlyService<Remaining, WarehouseStockSummary>, I
         if (!result.IsValid)
             throw new ModelValidationException(result.Errors.ToList());
 
-        // Проверяем существование продукта
         await new EntityCheckHelper(_context).EnsureExistsAndActive<Product>(command.ProductId);
 
         // Проверяем существование склада
@@ -132,7 +131,7 @@ public class StockService : ReadOnlyService<Remaining, WarehouseStockSummary>, I
         return await MapToSummaryAsync(remaining);
     }
 
-    public async Task<WarehouseStockSummary> GetByIdAsync(int remainingId)
+    public new async Task<WarehouseStockSummary> GetByIdAsync(int remainingId)
     {
         var remaining = await _context.Remaining
             .FirstOrDefaultAsync(r => r.Id == remainingId);

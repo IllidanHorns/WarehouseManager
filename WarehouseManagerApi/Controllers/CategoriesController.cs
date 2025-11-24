@@ -5,6 +5,9 @@ using WarehouseManagerContracts.DTOs.Category;
 
 namespace WarehouseManagerApi.Controllers
 {
+    /// <summary>
+    /// Управляет категориями товаров.
+    /// </summary>
     [Route("api/[controller]")]
     public class CategoriesController : ApiControllerBase
     {
@@ -15,6 +18,10 @@ namespace WarehouseManagerApi.Controllers
             _categoryService = categoryService;
         }
 
+        /// <summary>
+        /// Возвращает список категорий с фильтрацией и пагинацией.
+        /// </summary>
+        /// <param name="filter">Параметры фильтра и пагинации.</param>
         [HttpGet]
         public async Task<IActionResult> GetCategories([FromQuery] CategoryFilter filter)
         {
@@ -22,6 +29,10 @@ namespace WarehouseManagerApi.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Возвращает категорию по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор категории.</param>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetCategory(int id)
         {
@@ -36,6 +47,10 @@ namespace WarehouseManagerApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Создаёт новую категорию.
+        /// </summary>
+        /// <param name="command">Данные создаваемой категории.</param>
         [HttpPost]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryCommand command)
         {
@@ -50,6 +65,11 @@ namespace WarehouseManagerApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Обновляет существующую категорию.
+        /// </summary>
+        /// <param name="id">Идентификатор категории.</param>
+        /// <param name="command">Новые данные категории.</param>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] UpdateCategoryCommand command)
         {
@@ -72,6 +92,11 @@ namespace WarehouseManagerApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Архивирует категорию.
+        /// </summary>
+        /// <param name="id">Идентификатор категории.</param>
+        /// <param name="userId">Идентификатор пользователя, выполняющего операцию.</param>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> ArchiveCategory(int id, [FromQuery] int userId)
         {

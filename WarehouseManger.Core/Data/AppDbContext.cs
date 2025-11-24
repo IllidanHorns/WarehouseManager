@@ -24,6 +24,7 @@ namespace WarehouseManager.Core.Data
         public DbSet<OrdersProducts> OrdersProducts { get; set; } = null!;
         public DbSet<OperationsAudit> OperationsAudits { get; set; } = null!;
         public DbSet<EmployeesWarehouses> EmployeesWarehouses { get; set; } = null!;
+        public DbSet<ApplicationMetric> ApplicationMetrics { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -222,6 +223,16 @@ namespace WarehouseManager.Core.Data
                       .WithMany(w => w.EmployeesWarehouses)
                       .HasForeignKey(ew => ew.WarehouseId)
                       .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<ApplicationMetric>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.MetricName).HasMaxLength(255).IsRequired();
+                entity.HasIndex(e => e.MetricName).IsUnique();
+                entity.Property(e => e.Value).IsRequired();
+                entity.Property(e => e.LastUpdated).HasDefaultValueSql("GETDATE()");
+                entity.Property(e => e.Description).HasMaxLength(1000);
             });
 
             builder.Entity<WarehouseStockDto>()

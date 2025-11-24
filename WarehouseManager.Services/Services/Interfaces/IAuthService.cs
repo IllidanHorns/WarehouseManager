@@ -1,5 +1,5 @@
-using WarehouseManagerContracts.DTOs.Auth;
 using WarehouseManager.Core.Models;
+using WarehouseManagerContracts.DTOs.Auth;
 
 namespace WarehouseManager.Services.Services.Interfaces
 {

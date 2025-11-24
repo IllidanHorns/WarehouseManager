@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using WarehouseManager.Wpf.Static;
 using WarehouseManager.Wpf.View;
 using System;
+using ModernWpf;
+using WarehouseManager.Wpf.Helpers;
 
 namespace WarehouseManager.Wpf.ViewModels
 {
@@ -22,9 +24,14 @@ namespace WarehouseManager.Wpf.ViewModels
         [ObservableProperty]
         private bool _isNavigationVisible = true;
 
+        [ObservableProperty]
+        private bool _isDarkTheme;
+
         public MainWindowViewModel()
         {
             LoadNavigationItems();
+            IsDarkTheme = ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark;
+            ThemeResourceHelper.ApplyTheme(ThemeManager.Current.ActualApplicationTheme);
         }
 
         private void LoadNavigationItems()
@@ -92,6 +99,22 @@ namespace WarehouseManager.Wpf.ViewModels
                 mainWindow.Close();
             }
         }
+
+        [RelayCommand]
+        private void ToggleTheme()
+        {
+            IsDarkTheme = !IsDarkTheme;
+        }
+
+        partial void OnIsDarkThemeChanged(bool value)
+        {
+            var theme = value ? ApplicationTheme.Dark : ApplicationTheme.Light;
+            ThemeManager.Current.ApplicationTheme = theme;
+            ThemeResourceHelper.ApplyTheme(theme);
+            OnPropertyChanged(nameof(ThemeToggleLabel));
+        }
+
+        public string ThemeToggleLabel => IsDarkTheme ? "Светлая тема" : "Тёмная тема";
 
         partial void OnSelectedNavigationItemChanged(NavigationItem? value)
         {

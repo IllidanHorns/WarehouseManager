@@ -8,7 +8,7 @@
         Width="800"
         Height="600"
         WindowStartupLocation="CenterScreen"
-        Background="#EDC7B7">
+        Background="{DynamicResource SurfaceBrush}">
     <Grid Margin="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -22,7 +22,7 @@
                    Grid.Row="0"
                    FontSize="24"
                    FontWeight="Bold"
-                   Foreground="#123C69"
+                   Foreground="{DynamicResource PrimaryTextBrush}"
                    Margin="0,0,0,16"/>
 
         <!-- Список товаров -->
@@ -30,7 +30,7 @@
             <ItemsControl ItemsSource="{Binding Items}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Background="#EEE2DC"
+                        <Border Background="{DynamicResource PanelBrush}"
                                 CornerRadius="8"
                                 Padding="16"
                                 Margin="0,0,0,8">
@@ -46,24 +46,24 @@
                                     <TextBlock Text="{Binding Product.Name}"
                                                FontSize="16"
                                                FontWeight="Bold"
-                                               Foreground="#123C69"
+                                               Foreground="{DynamicResource PrimaryTextBrush}"
                                                Margin="0,0,0,4"/>
                                     <TextBlock Text="{Binding Product.CategoryName}"
                                                FontSize="12"
-                                               Foreground="#AC3B61"
+                                               Foreground="{DynamicResource AccentSecondaryBrush}"
                                                Margin="0,0,0,4"/>
                                     <TextBlock>
-                                        <Run Text="Склад: " Foreground="#123C69"/>
-                                        <Run Text="{Binding WarehouseAddress}" Foreground="#123C69"/>
+                                        <Run Text="Склад: " Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        <Run Text="{Binding WarehouseAddress}" Foreground="{DynamicResource PrimaryTextBrush}"/>
                                     </TextBlock>
                                     <TextBlock Margin="0,4,0,0">
-                                        <Run Text="Цена: " Foreground="#123C69"/>
-                                        <Run Text="{Binding UnitPrice, StringFormat='{}{0:F2}', Mode=OneWay}" Foreground="#123C69" FontWeight="Bold"/>
-                                        <Run Text=" руб." Foreground="#123C69"/>
+                                        <Run Text="Цена: " Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        <Run Text="{Binding UnitPrice, StringFormat='{}{0:F2}', Mode=OneWay}" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="Bold"/>
+                                        <Run Text=" руб." Foreground="{DynamicResource PrimaryTextBrush}"/>
                                     </TextBlock>
                                     <TextBlock Margin="0,4,0,0">
-                                        <Run Text="Доступно: " Foreground="#123C69"/>
-                                        <Run Text="{Binding AvailableQuantity}" Foreground="#123C69"/>
+                                        <Run Text="Доступно: " Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        <Run Text="{Binding AvailableQuantity}" Foreground="{DynamicResource PrimaryTextBrush}"/>
                                     </TextBlock>
                                 </StackPanel>
 
@@ -73,17 +73,17 @@
                                             Tag="{Binding}"
                                             Padding="8,4"
                                             Width="30"
-                                            Background="#123C69"
-                                            Foreground="#EEE2DC"
-                                            BorderBrush="#BAB2B5"
+                                            Background="{DynamicResource AccentBrush}"
+                                            Foreground="{DynamicResource SecondaryTextBrush}"
+                                            BorderBrush="{DynamicResource BorderBrushBase}"
                                             Cursor="Hand"/>
                                     <TextBox x:Name="QuantityTextBox"
                                              Text="{Binding Quantity, UpdateSourceTrigger=LostFocus}"
                                              Width="50"
                                              Margin="8,0"
-                                             Foreground="#123C69"
+                                             Foreground="{DynamicResource PrimaryTextBrush}"
                                              Background="Transparent"
-                                             BorderBrush="#BAB2B5"
+                                             BorderBrush="{DynamicResource BorderBrushBase}"
                                              BorderThickness="1"
                                              TextAlignment="Center"
                                              LostFocus="QuantityTextBox_LostFocus"
@@ -93,9 +93,9 @@
                                             Tag="{Binding}"
                                             Padding="8,4"
                                             Width="30"
-                                            Background="#123C69"
-                                            Foreground="#EEE2DC"
-                                            BorderBrush="#BAB2B5"
+                                            Background="{DynamicResource AccentBrush}"
+                                            Foreground="{DynamicResource SecondaryTextBrush}"
+                                            BorderBrush="{DynamicResource BorderBrushBase}"
                                             Cursor="Hand"/>
                                 </StackPanel>
 
@@ -104,7 +104,7 @@
                                            Margin="16,0"
                                            FontSize="16"
                                            FontWeight="Bold"
-                                           Foreground="#123C69">
+                                           Foreground="{DynamicResource PrimaryTextBrush}">
                                     <Run Text="{Binding TotalPrice, StringFormat='{}{0:F2}', Mode=OneWay}"/>
                                     <Run Text=" руб."/>
                                 </TextBlock>
@@ -115,9 +115,9 @@
                                         CommandParameter="{Binding}"
                                         Padding="8,4"
                                         Width="30"
-                                        Background="#AC3B61"
-                                        Foreground="#EEE2DC"
-                                        BorderBrush="#BAB2B5"
+                                        Background="{DynamicResource AccentSecondaryBrush}"
+                                        Foreground="{DynamicResource SecondaryTextBrush}"
+                                        BorderBrush="{DynamicResource BorderBrushBase}"
                                         Cursor="Hand"
                                         ToolTip="Удалить"/>
                             </Grid>
@@ -129,7 +129,7 @@
 
         <!-- Итого -->
         <Border Grid.Row="2"
-                Background="#EEE2DC"
+                Background="{DynamicResource PanelBrush}"
                 CornerRadius="8"
                 Padding="16"
                 Margin="0,16,0,16">
@@ -142,13 +142,13 @@
                            Grid.Column="0"
                            FontSize="20"
                            FontWeight="Bold"
-                           Foreground="#123C69"
+                           Foreground="{DynamicResource PrimaryTextBrush}"
                            VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding TotalPrice, StringFormat='{}{0:F2} руб.', Mode=OneWay}"
                            Grid.Column="1"
                            FontSize="20"
                            FontWeight="Bold"
-                           Foreground="#AC3B61"/>
+                           Foreground="{DynamicResource AccentSecondaryBrush}"/>
             </Grid>
         </Border>
 
@@ -158,26 +158,26 @@
                     Command="{Binding ClearCartCommand}"
                     Padding="16,8"
                     Margin="0,0,8,0"
-                    Background="#BAB2B5"
-                    Foreground="#123C69"
-                    BorderBrush="#123C69"
+                    Background="{DynamicResource BorderBrushBase}"
+                    Foreground="{DynamicResource PrimaryTextBrush}"
+                    BorderBrush="{DynamicResource PrimaryTextBrush}"
                     BorderThickness="2"
                     Cursor="Hand"/>
             <Button Content="Обновить остатки"
                     Command="{Binding RefreshAvailabilityCommand}"
                     Padding="16,8"
                     Margin="0,0,8,0"
-                    Background="#123C69"
-                    Foreground="#EEE2DC"
-                    BorderBrush="#BAB2B5"
+                    Background="{DynamicResource AccentBrush}"
+                    Foreground="{DynamicResource SecondaryTextBrush}"
+                    BorderBrush="{DynamicResource BorderBrushBase}"
                     Cursor="Hand"/>
             <Button Content="Оформить заказ"
                     Command="{Binding OpenCheckoutCommand}"
                     Padding="24,12"
                     FontSize="16"
-                    Background="#AC3B61"
-                    Foreground="#EEE2DC"
-                    BorderBrush="#BAB2B5"
+                    Background="{DynamicResource AccentSecondaryBrush}"
+                    Foreground="{DynamicResource SecondaryTextBrush}"
+                    BorderBrush="{DynamicResource BorderBrushBase}"
                     BorderThickness="2"
                     Cursor="Hand"
                     IsEnabled="{Binding Items.Count, Converter={StaticResource GreaterThanZeroConverter}}"/>

@@ -1,44 +1,48 @@
-﻿using BCrypt.Net;
-using Microsoft.EntityFrameworkCore;
-using WarehouseManagerContracts.DTOs.Auth;
+﻿using Microsoft.EntityFrameworkCore;
+using BCrypt.Net;
+using FluentValidation.Results;
 using WarehouseManager.Core.Data;
 using WarehouseManager.Core.Models;
 using WarehouseManager.Services.Exceptions;
 using WarehouseManager.Services.Services.Interfaces;
+using WarehouseManagerContracts.DTOs.Auth;
 using WarehouseManagerContracts.Validation.Auth;
 
-namespace WarehouseManager.Application.Services;
-
-
-public class AuthService : IAuthService
+namespace WarehouseManager.Services.Services
 {
-    private readonly AppDbContext _context;
-
-    public AuthService(AppDbContext context)
+    public class AuthService : IAuthService
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    public async Task<User> AuthenticateAsync(LoginCommand command)
-    {
-        var validator = new LoginCommandValidator();
-        var result = await validator.ValidateAsync(command);
-        if (!result.IsValid)
-            throw new ModelValidationException(result.Errors.ToList());
+        public AuthService(AppDbContext context)
+        {
+            _context = context;
+        }
 
-        var user = await _context.Users
-            .Include(u => u.Role)
-            .FirstOrDefaultAsync(u => u.Email == command.Email);
+        public async Task<User> AuthenticateAsync(LoginCommand command)
+        {
+            var validator = new LoginCommandValidator();
+            var result = await validator.ValidateAsync(command);
+            if (!result.IsValid)
+            {
+                throw new ModelValidationException(result.Errors.ToList());
+            }
 
-        if (user == null)
-            throw new InvalidCredentialsException("Неверный email или пароль.");
+            var user = await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Email == command.Email && !u.IsArchived);
 
-        if (user.IsArchived)
-            throw new InvalidCredentialsException("Учётная запись деактивирована.");
+            if (user == null)
+            {
+                throw new InvalidCredentialsException("Неправильный email или пароль");
+            }
 
-        if (!BCrypt.Net.BCrypt.Verify(command.Password, user.PasswordHash))
-            throw new InvalidCredentialsException("Неверный email или пароль.");
+            if (!BCrypt.Net.BCrypt.Verify(command.Password, user.PasswordHash))
+            {
+                throw new InvalidCredentialsException("Неправильный email или пароль");
+            }
 
-        return user;
+            return user;
+        }
     }
 }

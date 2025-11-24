@@ -1,0 +1,117 @@
+version: "3.9"
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: warehouse-db
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: ${SA_PASSWORD:?Set SA_PASSWORD in .env}
+      DB_NAME: ${DB_NAME:-WarehouseManager}
+      DB_LOGICAL_DATA_NAME: ${DB_LOGICAL_DATA_NAME:-WarehouseManager}
+      DB_LOGICAL_LOG_NAME: ${DB_LOGICAL_LOG_NAME:-WarehouseManager_log}
+      DB_BACKUP_FILE: /var/opt/mssql/backup/WarehouseManager.bak
+    volumes:
+      - mssql-data:/var/opt/mssql
+      - ./WarehouseManager.bak:/var/opt/mssql/backup/WarehouseManager.bak:ro
+      - ./docker/sql/restore-db.sh:/scripts/restore-db.sh:ro
+      - ./docker/sql/post-restore.sql:/scripts/post-restore.sql:ro
+    entrypoint: ["/bin/bash", "/scripts/restore-db.sh"]
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P \"$${SA_PASSWORD}\" -Q \"SELECT 1\"",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 15
+      start_period: 20s
+    networks:
+      - app-net
+
+  api:
+    container_name: warehouse-api
+    build:
+      context: .
+      dockerfile: WarehouseManagerApi/Dockerfile
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${API_ASPNETCORE_ENVIRONMENT:-Production}
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Server=db;Database=${DB_NAME:-WarehouseManager};User ID=sa;Password=${SA_PASSWORD};MultipleActiveResultSets=true;TrustServerCertificate=True"
+    depends_on:
+      - db
+    ports:
+      - "5041:8080"
+    networks:
+      - app-net
+
+  admin:
+    container_name: warehouse-admin
+    build:
+      context: .
+      dockerfile: WarehouseManager.AdminWeb/Dockerfile
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ADMIN_ASPNETCORE_ENVIRONMENT:-Production}
+      ASPNETCORE_URLS: http://+:8080
+      Api__BaseUrl: http://api:8080
+    depends_on:
+      - api
+    ports:
+      - "5080:8080"
+    networks:
+      - app-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: warehouse-prometheus
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+    networks:
+      - app-net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: warehouse-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - app-net
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  mssql-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+

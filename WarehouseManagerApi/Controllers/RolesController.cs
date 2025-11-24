@@ -5,6 +5,9 @@ using WarehouseManagerContracts.DTOs.Role;
 
 namespace WarehouseManagerApi.Controllers;
 
+/// <summary>
+/// Возвращает доступные роли пользователей.
+/// </summary>
 [Route("api/[controller]")]
 public class RolesController : ControllerBase
 {
@@ -15,6 +18,10 @@ public class RolesController : ControllerBase
         _context = context;
     }
 
+    /// <summary>
+    /// Получает список ролей.
+    /// </summary>
+    /// <param name="includeArchived">Признак включения архивных ролей.</param>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<RoleDto>>> GetRoles([FromQuery] bool includeArchived = false)
     {

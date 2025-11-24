@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              d:DesignHeight="800"
              d:DesignWidth="1200">
-    <Grid Margin="24">
+    <Grid Margin="24" Background="{DynamicResource SurfaceBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -19,11 +19,11 @@
                    Grid.Row="0"
                    FontSize="28"
                    FontWeight="Bold"
-                   Foreground="#123C69"
+                   Foreground="{DynamicResource PrimaryTextBrush}"
                    Margin="0,0,0,16"/>
 
         <Border Grid.Row="1"
-                Background="#EEE2DC"
+                Background="{DynamicResource PanelBrush}"
                 CornerRadius="8"
                 Padding="16"
                 Margin="0,0,0,16">
@@ -34,32 +34,32 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center">
-                    <TextBlock Text="Название товара:" Foreground="#123C69" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="Название товара:" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <TextBox Width="220"
                              Text="{Binding ProductNameFilter, UpdateSourceTrigger=PropertyChanged}"
                              Background="Transparent"
-                             Foreground="#123C69"
-                             BorderBrush="#BAB2B5"
+                             Foreground="{DynamicResource PrimaryTextBrush}"
+                             BorderBrush="{DynamicResource BorderBrushBase}"
                              BorderThickness="1"
                              Margin="0,0,16,0"/>
 
-                    <TextBlock Text="Категория:" Foreground="#123C69" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="Категория:" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <StackPanel Orientation="Horizontal">
                         <ComboBox ItemsSource="{Binding Categories}"
                                   SelectedItem="{Binding SelectedCategory}"
                                   DisplayMemberPath="Name"
                                   Width="220"
-                                  Background="#EEE2DC"
-                                  Foreground="#123C69"
-                                  BorderBrush="#BAB2B5"
+                                  Background="{DynamicResource PanelBrush}"
+                                  Foreground="{DynamicResource PrimaryTextBrush}"
+                                  BorderBrush="{DynamicResource BorderBrushBase}"
                                   BorderThickness="1"/>
                         <Button Content="Очистить"
                                 Command="{Binding ClearCategoryFilterCommand}"
                                 Margin="8,0,0,0"
                                 Padding="16,6"
-                                Background="#AC3B61"
-                                Foreground="#EEE2DC"
-                                BorderBrush="#BAB2B5"
+                                Background="{DynamicResource AccentSecondaryBrush}"
+                                Foreground="{DynamicResource SecondaryTextBrush}"
+                                BorderBrush="{DynamicResource BorderBrushBase}"
                                 Cursor="Hand"
                                 Visibility="{Binding IsCategorySelected, Converter={StaticResource BoolToVisibilityConverter}}"/>
                     </StackPanel>
@@ -70,9 +70,9 @@
                             Command="{Binding FilterCommand}"
                             Padding="24,12"
                             Margin="16,0,0,0"
-                            Background="#123C69"
-                            Foreground="#EEE2DC"
-                            BorderBrush="#BAB2B5"
+                            Background="{DynamicResource AccentBrush}"
+                            Foreground="{DynamicResource SecondaryTextBrush}"
+                            BorderBrush="{DynamicResource BorderBrushBase}"
                             BorderThickness="2"
                             Cursor="Hand"/>
                 </StackPanel>
@@ -81,12 +81,12 @@
 
         <TextBlock Grid.Row="2"
                    Text="{Binding ErrorMessage}"
-                   Foreground="#AC3B61"
+                   Foreground="{DynamicResource AccentSecondaryBrush}"
                    Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"
                    Margin="0,0,0,8"/>
 
         <Border Grid.Row="3"
-                Background="#EEE2DC"
+                Background="{DynamicResource PanelBrush}"
                 CornerRadius="8"
                 Padding="16">
             <DataGrid ItemsSource="{Binding PriceHistories}"
@@ -97,22 +97,22 @@
                       CanUserResizeColumns="True"
                       HeadersVisibility="Column"
                       IsReadOnly="True"
-                      Background="#EEE2DC"
-                      Foreground="#123C69"
+                      Background="{DynamicResource PanelBrush}"
+                      Foreground="{DynamicResource TableTextBrush}"
                       BorderThickness="0"
                       GridLinesVisibility="None"
-                      RowBackground="#EDC7B7"
-                      AlternatingRowBackground="#F4D4C4"
+                      RowBackground="{DynamicResource CardBrush}"
+                      AlternatingRowBackground="{DynamicResource PanelBrush}"
                       SelectionUnit="FullRow"
                       SelectionMode="Single">
                 <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="DataGridColumnHeader">
                         <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="#123C69"/>
+                        <Setter Property="Foreground" Value="{DynamicResource TableHeaderTextBrush}"/>
                         <Setter Property="FontWeight" Value="Bold"/>
                         <Setter Property="HorizontalContentAlignment" Value="Left"/>
                         <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                        <Setter Property="BorderBrush" Value="#D8C3A5"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushBase}"/>
                         <Setter Property="Padding" Value="0,0,0,8"/>
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
@@ -144,7 +144,7 @@
 
             <TextBlock Grid.Column="0"
                        VerticalAlignment="Center"
-                       Foreground="#123C69">
+                       Foreground="{DynamicResource PrimaryTextBrush}">
                 <Run Text="Страница"/>
                 <Run Text="{Binding CurrentPage}"/>
                 <Run Text=" из "/>
@@ -157,15 +157,15 @@
             <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
                     <TextBlock Text="Строк на странице: "
-                               Foreground="#123C69"
+                               Foreground="{DynamicResource PrimaryTextBrush}"
                                VerticalAlignment="Center"
                                Margin="0,0,8,0"/>
                     <ComboBox Width="80"
                               SelectedItem="{Binding PageSize, UpdateSourceTrigger=PropertyChanged}"
                               ItemsSource="{Binding AvailablePageSizes}"
-                              Background="#EEE2DC"
-                              Foreground="#123C69"
-                              BorderBrush="#BAB2B5"
+                              Background="{DynamicResource PanelBrush}"
+                              Foreground="{DynamicResource PrimaryTextBrush}"
+                              BorderBrush="{DynamicResource BorderBrushBase}"
                               BorderThickness="1"/>
                 </StackPanel>
 
@@ -174,16 +174,16 @@
                         IsEnabled="{Binding CurrentPage, Converter={StaticResource GreaterThanOneConverter}}"
                         Padding="16,8"
                         Margin="0,0,8,0"
-                        Background="#123C69"
-                        Foreground="#EEE2DC"
-                        BorderBrush="#BAB2B5"
+                        Background="{DynamicResource AccentBrush}"
+                        Foreground="{DynamicResource SecondaryTextBrush}"
+                        BorderBrush="{DynamicResource BorderBrushBase}"
                         Cursor="Hand"/>
                 <Button Content="Вперёд ►"
                         Command="{Binding NextPageCommand}"
                         Padding="16,8"
-                        Background="#123C69"
-                        Foreground="#EEE2DC"
-                        BorderBrush="#BAB2B5"
+                        Background="{DynamicResource AccentBrush}"
+                        Foreground="{DynamicResource SecondaryTextBrush}"
+                        BorderBrush="{DynamicResource BorderBrushBase}"
                         Cursor="Hand">
                     <Button.IsEnabled>
                         <MultiBinding Converter="{StaticResource LessThanTotalPagesConverter}">

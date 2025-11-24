@@ -5,6 +5,9 @@ using WarehouseManagerContracts.DTOs.User;
 
 namespace WarehouseManagerApi.Controllers
 {
+    /// <summary>
+    /// Предоставляет операции аутентификации пользователей.
+    /// </summary>
     [Route("api/[controller]")]
     public class AuthController : ApiControllerBase
     {
@@ -15,6 +18,11 @@ namespace WarehouseManagerApi.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Выполняет вход по логину и паролю.
+        /// </summary>
+        /// <param name="command">Учётные данные пользователя.</param>
+        /// <returns>Информация о пользователе при успешном входе.</returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginCommand command)
         {

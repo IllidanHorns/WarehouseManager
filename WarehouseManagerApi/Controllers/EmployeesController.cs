@@ -6,6 +6,9 @@ using WarehouseManagerContracts.DTOs.Employee;
 
 namespace WarehouseManagerApi.Controllers
 {
+    /// <summary>
+    /// Управляет сотрудниками компании.
+    /// </summary>
     [Route("api/[controller]")]
     public class EmployeesController : ApiControllerBase
     {
@@ -16,6 +19,10 @@ namespace WarehouseManagerApi.Controllers
             _employeeService = employeeService;
         }
 
+        /// <summary>
+        /// Возвращает сотрудников согласно фильтру.
+        /// </summary>
+        /// <param name="filter">Фильтр поиска и параметры пагинации.</param>
         [HttpGet]
         public async Task<IActionResult> GetEmployees([FromQuery] EmployeeFilters filter)
         {
@@ -33,6 +40,10 @@ namespace WarehouseManagerApi.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Создаёт нового сотрудника.
+        /// </summary>
+        /// <param name="command">Данные сотрудника.</param>
         [HttpPost]
         public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeCommand command)
         {
@@ -47,6 +58,11 @@ namespace WarehouseManagerApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Обновляет данные сотрудника.
+        /// </summary>
+        /// <param name="id">Идентификатор сотрудника.</param>
+        /// <param name="command">Изменяемые данные.</param>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateEmployee(int id, [FromBody] UpdateEmployeeCommand command)
         {
@@ -70,6 +86,11 @@ namespace WarehouseManagerApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Архивирует сотрудника.
+        /// </summary>
+        /// <param name="id">Идентификатор сотрудника.</param>
+        /// <param name="currentUserId">Пользователь, выполняющий операцию.</param>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> ArchiveEmployee(int id, [FromQuery] int currentUserId)
         {

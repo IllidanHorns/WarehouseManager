@@ -8,7 +8,7 @@
         Width="600"
         Height="700"
         WindowStartupLocation="CenterScreen"
-        Background="#EDC7B7">
+        Background="{DynamicResource SurfaceBrush}">
     <Grid Margin="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -22,24 +22,24 @@
                    Grid.Row="0"
                    FontSize="24"
                    FontWeight="Bold"
-                   Foreground="#123C69"
+                   Foreground="{DynamicResource PrimaryTextBrush}"
                    Margin="0,0,0,16"/>
 
         <!-- Форма -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <!-- Склад -->
-                <Border Background="#EEE2DC" CornerRadius="8" Padding="12" Margin="0,0,0,16">
+                <Border Background="{DynamicResource PanelBrush}" CornerRadius="8" Padding="12" Margin="0,0,0,16">
                     <StackPanel>
-                        <TextBlock Text="Склад *" Foreground="#123C69" FontSize="12" Margin="0,0,0,4"/>
+                        <TextBlock Text="Склад *" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12" Margin="0,0,0,4"/>
                         <StackPanel Orientation="Horizontal">
                             <ComboBox SelectedValue="{Binding SelectedWarehouseId}"
                                       DisplayMemberPath="Address"
                                       SelectedValuePath="Id"
                                       ItemsSource="{Binding Warehouses}"
-                                      Foreground="#123C69"
+                                      Foreground="{DynamicResource PrimaryTextBrush}"
                                       Background="Transparent"
-                                      BorderBrush="#BAB2B5"
+                                      BorderBrush="{DynamicResource BorderBrushBase}"
                                       BorderThickness="1"
                                       MinHeight="30"
                                       HorizontalAlignment="Stretch"
@@ -48,9 +48,9 @@
                                     Command="{Binding ClearWarehouseCommand}"
                                     Padding="8,4"
                                     Margin="4,0,0,0"
-                                    Background="#AC3B61"
-                                    Foreground="#EEE2DC"
-                                    BorderBrush="#BAB2B5"
+                                    Background="{DynamicResource AccentSecondaryBrush}"
+                                    Foreground="{DynamicResource SecondaryTextBrush}"
+                                    BorderBrush="{DynamicResource BorderBrushBase}"
                                     BorderThickness="1"
                                     Cursor="Hand"
                                     FontSize="12"
@@ -62,13 +62,13 @@
                 </Border>
 
                 <!-- Товары в заказе -->
-                <Border Background="#EEE2DC" CornerRadius="8" Padding="12" Margin="0,0,0,16">
+                <Border Background="{DynamicResource PanelBrush}" CornerRadius="8" Padding="12" Margin="0,0,0,16">
                     <StackPanel>
-                        <TextBlock Text="Товары в заказе:" Foreground="#123C69" FontSize="14" FontWeight="Bold" Margin="0,0,0,8"/>
+                        <TextBlock Text="Товары в заказе:" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" Margin="0,0,0,8"/>
                         <ItemsControl ItemsSource="{Binding Items}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="#EDC7B7"
+                                    <Border Background="{DynamicResource CardBrush}"
                                             CornerRadius="4"
                                             Padding="8"
                                             Margin="0,0,0,4">
@@ -80,22 +80,22 @@
                                             <StackPanel Grid.Column="0">
                                                 <TextBlock Text="{Binding Product.Name}"
                                                            FontWeight="Bold"
-                                                           Foreground="#123C69"/>
+                                                           Foreground="{DynamicResource PrimaryTextBrush}"/>
                                                 <TextBlock>
-                                                    <Run Text="Количество: " Foreground="#123C69"/>
-                                                    <Run Text="{Binding Quantity}" Foreground="#123C69"/>
+                                                    <Run Text="Количество: " Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                    <Run Text="{Binding Quantity}" Foreground="{DynamicResource PrimaryTextBrush}"/>
                                                 </TextBlock>
                                                 <TextBlock>
-                                                    <Run Text="Цена: " Foreground="#123C69"/>
-                                                    <Run Text="{Binding UnitPrice, StringFormat='{}{0:F2}', Mode=OneWay}" Foreground="#123C69"/>
-                                                    <Run Text=" руб." Foreground="#123C69"/>
+                                                    <Run Text="Цена: " Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                    <Run Text="{Binding UnitPrice, StringFormat='{}{0:F2}', Mode=OneWay}" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                    <Run Text=" руб." Foreground="{DynamicResource PrimaryTextBrush}"/>
                                                 </TextBlock>
                                             </StackPanel>
                                             <TextBlock Grid.Column="1"
                                                        VerticalAlignment="Center"
                                                        FontSize="16"
                                                        FontWeight="Bold"
-                                                       Foreground="#AC3B61">
+                                                       Foreground="{DynamicResource AccentSecondaryBrush}">
                                                 <Run Text="{Binding TotalPrice, StringFormat='{}{0:F2}', Mode=OneWay}"/>
                                                 <Run Text=" руб."/>
                                             </TextBlock>
@@ -108,7 +108,7 @@
                 </Border>
 
                 <!-- Итого -->
-                <Border Background="#EEE2DC" CornerRadius="8" Padding="12" Margin="0,0,0,16">
+                <Border Background="{DynamicResource PanelBrush}" CornerRadius="8" Padding="12" Margin="0,0,0,16">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -118,18 +118,18 @@
                                    Grid.Column="0"
                                    FontSize="18"
                                    FontWeight="Bold"
-                                   Foreground="#123C69"/>
+                                   Foreground="{DynamicResource PrimaryTextBrush}"/>
                         <TextBlock Text="{Binding TotalPrice, StringFormat='{}{0:F2} руб.', Mode=OneWay}"
                                    Grid.Column="1"
                                    FontSize="18"
                                    FontWeight="Bold"
-                                   Foreground="#AC3B61"/>
+                                   Foreground="{DynamicResource AccentSecondaryBrush}"/>
                     </Grid>
                 </Border>
 
                 <!-- Сообщение об ошибке -->
                 <TextBlock Text="{Binding ErrorMessage}"
-                           Foreground="#AC3B61"
+                           Foreground="{DynamicResource AccentSecondaryBrush}"
                            TextWrapping="Wrap"
                            Margin="0,0,0,16"
                            Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"/>
@@ -143,9 +143,9 @@
                     Padding="24,8"
                     Margin="0,0,8,0"
                     MinWidth="100"
-                    Background="#BAB2B5"
-                    Foreground="#123C69"
-                    BorderBrush="#123C69"
+                    Background="{DynamicResource BorderBrushBase}"
+                    Foreground="{DynamicResource PrimaryTextBrush}"
+                    BorderBrush="{DynamicResource PrimaryTextBrush}"
                     BorderThickness="2"
                     Cursor="Hand"/>
             <Button Content="Оформить заказ"
@@ -154,9 +154,9 @@
                     MinWidth="150"
                     MinHeight="40"
                     FontSize="16"
-                    Background="#123C69"
-                    Foreground="#EEE2DC"
-                    BorderBrush="#BAB2B5"
+                    Background="{DynamicResource AccentBrush}"
+                    Foreground="{DynamicResource SecondaryTextBrush}"
+                    BorderBrush="{DynamicResource BorderBrushBase}"
                     BorderThickness="2"
                     Cursor="Hand"/>
         </StackPanel>

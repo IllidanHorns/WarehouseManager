@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ui="http://schemas.modernwpf.com/2019"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="1200">
+             d:DesignHeight="800" d:DesignWidth="1200"
+             Background="{DynamicResource SurfaceBrush}">
     <Grid Margin="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -19,7 +20,7 @@
                    Grid.Row="0"
                    FontSize="28"
                    FontWeight="Bold"
-                   Foreground="#123C69"
+                   Foreground="{DynamicResource PrimaryTextBrush}"
                    Margin="0,0,0,16"/>
 
         <!-- Панель фильтров и кнопка добавления -->
@@ -36,13 +37,13 @@
                           Margin="0,0,16,0">
                 <StackPanel Orientation="Horizontal">
                     <!-- Фильтр по сотруднику -->
-                    <Border Background="#EEE2DC"
+                    <Border Background="{DynamicResource PanelBrush}"
                             CornerRadius="8"
                             Padding="12"
                             Margin="0,0,8,0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Сотрудник:"
-                                       Foreground="#123C69"
+                                       Foreground="{DynamicResource PrimaryTextBrush}"
                                        VerticalAlignment="Center"
                                        Margin="0,0,8,0"/>
                             <ComboBox ItemsSource="{Binding Employees}"
@@ -50,16 +51,16 @@
                                       DisplayMemberPath="FullName"
                                       Width="250"
                                       Background="Transparent"
-                                      Foreground="#123C69"
-                                      BorderBrush="#BAB2B5"
+                                      Foreground="{DynamicResource PrimaryTextBrush}"
+                                      BorderBrush="{DynamicResource BorderBrushBase}"
                                       BorderThickness="1"/>
                             <Button Content="✕"
                                     Command="{Binding ClearEmployeeFilterCommand}"
                                     Padding="8,4"
                                     Margin="8,0,0,0"
-                                    Background="#AC3B61"
-                                    Foreground="#EEE2DC"
-                                    BorderBrush="#123C69"
+                                    Background="{DynamicResource AccentSecondaryBrush}"
+                                    Foreground="{DynamicResource SecondaryTextBrush}"
+                                    BorderBrush="{DynamicResource AccentBrush}"
                                     BorderThickness="1"
                                     Cursor="Hand"
                                     Visibility="{Binding IsEmployeeSelected, Converter={StaticResource BoolToVisibilityConverter}}"
@@ -69,13 +70,13 @@
                     </Border>
 
                     <!-- Фильтр по складу -->
-                    <Border Background="#EEE2DC"
+                    <Border Background="{DynamicResource PanelBrush}"
                             CornerRadius="8"
                             Padding="12"
                             Margin="0,0,8,0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Склад:"
-                                       Foreground="#123C69"
+                                       Foreground="{DynamicResource PrimaryTextBrush}"
                                        VerticalAlignment="Center"
                                        Margin="0,0,8,0"/>
                             <ComboBox ItemsSource="{Binding Warehouses}"
@@ -83,16 +84,16 @@
                                       DisplayMemberPath="Address"
                                       Width="250"
                                       Background="Transparent"
-                                      Foreground="#123C69"
-                                      BorderBrush="#BAB2B5"
+                                      Foreground="{DynamicResource PrimaryTextBrush}"
+                                      BorderBrush="{DynamicResource BorderBrushBase}"
                                       BorderThickness="1"/>
                             <Button Content="✕"
                                     Command="{Binding ClearWarehouseFilterCommand}"
                                     Padding="8,4"
                                     Margin="8,0,0,0"
-                                    Background="#AC3B61"
-                                    Foreground="#EEE2DC"
-                                    BorderBrush="#123C69"
+                                    Background="{DynamicResource AccentSecondaryBrush}"
+                                    Foreground="{DynamicResource SecondaryTextBrush}"
+                                    BorderBrush="{DynamicResource AccentBrush}"
                                     BorderThickness="1"
                                     Cursor="Hand"
                                     Visibility="{Binding IsWarehouseSelected, Converter={StaticResource BoolToVisibilityConverter}}"
@@ -104,9 +105,9 @@
                     <Button Content="Поиск"
                             Command="{Binding FilterCommand}"
                             Padding="16,8"
-                            Background="#123C69"
-                            Foreground="#EEE2DC"
-                            BorderBrush="#BAB2B5"
+                            Background="{DynamicResource AccentBrush}"
+                            Foreground="{DynamicResource SecondaryTextBrush}"
+                            BorderBrush="{DynamicResource BorderBrushBase}"
                             Cursor="Hand"/>
                 </StackPanel>
             </ScrollViewer>
@@ -117,43 +118,24 @@
                     Command="{Binding OpenCreateWindowCommand}"
                     Padding="24,12"
                     FontSize="16"
-                    Background="#123C69"
-                    Foreground="#EEE2DC"
-                    BorderBrush="#BAB2B5"
+                    Background="{DynamicResource AccentBrush}"
+                    Foreground="{DynamicResource SecondaryTextBrush}"
+                    BorderBrush="{DynamicResource BorderBrushBase}"
                     BorderThickness="2"
-                    Cursor="Hand">
-                <Button.Triggers>
-                    <EventTrigger RoutedEvent="MouseEnter">
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
-                                                To="#AC3B61" Duration="0:0:0.2"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                    <EventTrigger RoutedEvent="MouseLeave">
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
-                                                To="#123C69" Duration="0:0:0.2"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Button.Triggers>
-            </Button>
+                    Cursor="Hand"/>
         </Grid>
 
         <!-- Сообщение об ошибке -->
         <TextBlock Text="{Binding ErrorMessage}"
                    Grid.Row="1"
-                   Foreground="#AC3B61"
+                   Foreground="{DynamicResource AccentSecondaryBrush}"
                    Margin="0,80,0,0"
                    TextWrapping="Wrap"
                    Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"/>
 
         <!-- Список назначений -->
         <Border Grid.Row="2"
-                Background="#EEE2DC"
+                Background="{DynamicResource PanelBrush}"
                 CornerRadius="8"
                 Padding="16">
             <ListView ItemsSource="{Binding EmployeeWarehouses}"
@@ -169,7 +151,7 @@
                         <GridViewColumn Header="ФИО сотрудника" Width="260">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding EmployeeFullName}" Foreground="#123C69" />
+                                    <TextBlock Text="{Binding EmployeeFullName}" Foreground="{DynamicResource PrimaryTextBrush}" />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -178,7 +160,7 @@
                         <GridViewColumn Header="Дата назначения" Width="200">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Foreground="#123C69">
+                                    <TextBlock Foreground="{DynamicResource PrimaryTextBrush}">
                                         <Run Text="{Binding CreationDateTime, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}"/>
                                     </TextBlock>
                                 </DataTemplate>
@@ -188,7 +170,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="Активно"
-                                               Foreground="#123C69"
+                                               Foreground="{DynamicResource PrimaryTextBrush}"
                                                FontWeight="SemiBold"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -200,9 +182,9 @@
                                             Command="{Binding DataContext.DeleteEmployeeWarehouseCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                             CommandParameter="{Binding}"
                                             Padding="12,6"
-                                            Background="#AC3B61"
-                                            Foreground="#EEE2DC"
-                                            BorderBrush="#123C69"
+                                            Background="{DynamicResource AccentSecondaryBrush}"
+                                            Foreground="{DynamicResource SecondaryTextBrush}"
+                                            BorderBrush="{DynamicResource AccentBrush}"
                                             BorderThickness="1"
                                             FontSize="12"
                                             Cursor="Hand"/>
@@ -224,7 +206,7 @@
             <!-- Информация о странице -->
             <TextBlock Grid.Column="0"
                        VerticalAlignment="Center"
-                       Foreground="#123C69">
+                       Foreground="{DynamicResource PrimaryTextBrush}">
                 <Run Text="Страница"/>
                 <Run Text="{Binding CurrentPage}"/>
                 <Run Text=" из "/>
@@ -239,15 +221,15 @@
                 <!-- Выбор размера страницы -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
                     <TextBlock Text="Строк на странице: " 
-                               Foreground="#123C69" 
+                               Foreground="{DynamicResource PrimaryTextBrush}" 
                                VerticalAlignment="Center"
                                Margin="0,0,8,0"/>
                     <ComboBox Width="80"
                               SelectedItem="{Binding PageSize, UpdateSourceTrigger=PropertyChanged}"
                               ItemsSource="{Binding AvailablePageSizes}"
-                              Background="#EEE2DC"
-                              Foreground="#123C69"
-                              BorderBrush="#BAB2B5"
+                              Background="{DynamicResource PanelBrush}"
+                              Foreground="{DynamicResource PrimaryTextBrush}"
+                              BorderBrush="{DynamicResource BorderBrushBase}"
                               BorderThickness="1"/>
                 </StackPanel>
                 
@@ -256,17 +238,17 @@
                         IsEnabled="{Binding CurrentPage, Converter={StaticResource GreaterThanOneConverter}}"
                         Padding="16,8"
                         Margin="0,0,8,0"
-                        Background="#123C69"
-                        Foreground="#EEE2DC"
-                        BorderBrush="#BAB2B5"
+                        Background="{DynamicResource AccentBrush}"
+                        Foreground="{DynamicResource SecondaryTextBrush}"
+                        BorderBrush="{DynamicResource BorderBrushBase}"
                         Cursor="Hand"/>
                 <Button Content="Вперёд ►"
                         Command="{Binding NextPageCommand}"
                         Padding="16,8"
                         Margin="0,0,8,0"
-                        Background="#123C69"
-                        Foreground="#EEE2DC"
-                        BorderBrush="#BAB2B5"
+                        Background="{DynamicResource AccentBrush}"
+                        Foreground="{DynamicResource SecondaryTextBrush}"
+                        BorderBrush="{DynamicResource BorderBrushBase}"
                         Cursor="Hand">
                     <Button.IsEnabled>
                         <MultiBinding Converter="{StaticResource LessThanTotalPagesConverter}">
@@ -278,9 +260,9 @@
                 <Button Content="Обновить"
                         Command="{Binding RefreshCommand}"
                         Padding="16,8"
-                        Background="#AC3B61"
-                        Foreground="#EEE2DC"
-                        BorderBrush="#BAB2B5"
+                        Background="{DynamicResource AccentSecondaryBrush}"
+                        Foreground="{DynamicResource SecondaryTextBrush}"
+                        BorderBrush="{DynamicResource BorderBrushBase}"
                         Cursor="Hand"/>
             </StackPanel>
         </Grid>

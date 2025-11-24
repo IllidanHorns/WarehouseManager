@@ -18,7 +18,18 @@ public partial class AnalyticsPage : UserControl
     {
         if (DataContext is AnalyticsViewModel viewModel)
         {
-            await viewModel.LoadAsync();
+            try
+            {
+                // Сначала загружаем фильтры, затем данные
+                await viewModel.LoadFilterDataAsync();
+                // LoadAsync сам проверит, загружены ли фильтры
+                await viewModel.LoadAsync();
+            }
+            catch (Exception ex)
+            {
+                // Если есть ошибка, она будет отображена через ErrorMessage
+                System.Diagnostics.Debug.WriteLine($"Ошибка при загрузке аналитики: {ex.Message}");
+            }
         }
     }
 }

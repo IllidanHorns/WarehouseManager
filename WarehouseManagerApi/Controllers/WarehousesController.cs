@@ -5,6 +5,9 @@ using WarehouseManagerContracts.DTOs.Warehouse;
 
 namespace WarehouseManagerApi.Controllers
 {
+    /// <summary>
+    /// Управляет данными о складах.
+    /// </summary>
     [Route("api/[controller]")]
     public class WarehousesController : ApiControllerBase
     {
@@ -15,6 +18,10 @@ namespace WarehouseManagerApi.Controllers
             _warehouseService = warehouseService;
         }
 
+        /// <summary>
+        /// Возвращает список складов.
+        /// </summary>
+        /// <param name="filter">Фильтр и пагинация.</param>
         [HttpGet]
         public async Task<IActionResult> GetWarehouses([FromQuery] WarehouseFilter filter)
         {
@@ -22,6 +29,10 @@ namespace WarehouseManagerApi.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Возвращает склад по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор склада.</param>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetWarehouse(int id)
         {
@@ -36,6 +47,10 @@ namespace WarehouseManagerApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Создаёт новый склад.
+        /// </summary>
+        /// <param name="command">Данные склада.</param>
         [HttpPost]
         public async Task<IActionResult> CreateWarehouse([FromBody] CreateWarehouseCommand command)
         {
@@ -50,6 +65,11 @@ namespace WarehouseManagerApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Обновляет сведения о складе.
+        /// </summary>
+        /// <param name="id">Идентификатор склада.</param>
+        /// <param name="command">Обновлённые данные.</param>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateWarehouse(int id, [FromBody] UpdateWarehouseCommand command)
         {
@@ -72,6 +92,11 @@ namespace WarehouseManagerApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Архивирует склад.
+        /// </summary>
+        /// <param name="id">Идентификатор склада.</param>
+        /// <param name="userId">Пользователь, выполняющий операцию.</param>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> ArchiveWarehouse(int id, [FromQuery] int userId)
         {

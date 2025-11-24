@@ -11,6 +11,20 @@
                 <ui:XamlControlsResources />
             </ResourceDictionary.MergedDictionaries>
 
+            <!-- Базовые кисти (значения для светлой темы по умолчанию, при старте будут обновлены помощником) -->
+            <SolidColorBrush x:Key="SurfaceBrush" Color="#FFF4D4C4"/>
+            <SolidColorBrush x:Key="PanelBrush" Color="#FFEEE2DC"/>
+            <SolidColorBrush x:Key="CardBrush" Color="#FFEDC7B7"/>
+            <SolidColorBrush x:Key="PrimaryTextBrush" Color="#FF123C69"/>
+            <SolidColorBrush x:Key="SecondaryTextBrush" Color="#FFEEE2DC"/>
+            <SolidColorBrush x:Key="TableTextBrush" Color="#FF123C69"/>
+            <SolidColorBrush x:Key="TableHeaderTextBrush" Color="#FF123C69"/>
+            <SolidColorBrush x:Key="AccentBrush" Color="#FF123C69"/>
+            <SolidColorBrush x:Key="AccentSecondaryBrush" Color="#FFAC3B61"/>
+            <SolidColorBrush x:Key="AccentHoverBrush" Color="#FFC42D4D"/>
+            <SolidColorBrush x:Key="BorderBrushBase" Color="#FFBAB2B5"/>
+            <SolidColorBrush x:Key="MutedBrush" Color="#FFD8C3A5"/>
+
             <!-- Конвертеры -->
             <convertor:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <convertor:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -31,12 +45,12 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="border" Property="Background" Value="#AC3B61"/>
-                                    <Setter TargetName="border" Property="BorderBrush" Value="#123C69"/>
+                                    <Setter TargetName="border" Property="Background" Value="{DynamicResource AccentHoverBrush}"/>
+                                    <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
-                                    <Setter TargetName="border" Property="Background" Value="#BAB2B5"/>
-                                    <Setter TargetName="border" Property="BorderBrush" Value="#123C69"/>
+                                    <Setter TargetName="border" Property="Background" Value="{DynamicResource MutedBrush}"/>
+                                    <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -54,28 +68,30 @@
             <Style x:Key="TableListViewItemStyle" TargetType="ListViewItem">
                 <Setter Property="Margin" Value="0,0,0,8"/>
                 <Setter Property="Padding" Value="12"/>
-                <Setter Property="Background" Value="#EDC7B7"/>
-                <Setter Property="Foreground" Value="#123C69"/>
+                <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource TableTextBrush}"/>
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource TableTextBrush}"/>
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 <Setter Property="BorderBrush" Value="Transparent"/>
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="Cursor" Value="Hand"/>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="#F4D4C4"/>
+                        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
                     </Trigger>
                     <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="#D8C3A5"/>
+                        <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}"/>
                     </Trigger>
                 </Style.Triggers>
             </Style>
 
             <Style x:Key="TableGridViewColumnHeaderStyle" TargetType="GridViewColumnHeader">
-                <Setter Property="Foreground" Value="#123C69"/>
+                <Setter Property="Foreground" Value="{DynamicResource TableHeaderTextBrush}"/>
                 <Setter Property="FontWeight" Value="Bold"/>
                 <Setter Property="HorizontalContentAlignment" Value="Left"/>
                 <Setter Property="Padding" Value="0,0,0,8"/>
-                <Setter Property="BorderBrush" Value="#D8C3A5"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MutedBrush}"/>
                 <Setter Property="BorderThickness" Value="0,0,0,1"/>
                 <Setter Property="Background" Value="Transparent"/>
             </Style>

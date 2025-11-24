@@ -17,12 +17,14 @@ public class OrderService : IOrderService
     private readonly AppDbContext _context;
     private readonly IAuditService _auditService;
     private readonly ITransactionManager _transactionManager;
+    private readonly IMetricsService? _metricsService;
 
-    public OrderService(AppDbContext context, IAuditService auditService, ITransactionManager transactionManager)
+    public OrderService(AppDbContext context, IAuditService auditService, ITransactionManager transactionManager, IMetricsService? metricsService = null)
     {
         _context = context;
         _auditService = auditService;
         _transactionManager = transactionManager;
+        _metricsService = metricsService;
     }
 
     public async Task<OrderSummary> CreateAsync(CreateOrderCommand command)
@@ -146,6 +148,12 @@ public class OrderService : IOrderService
             }
 
             await _context.SaveChangesAsync();
+
+            // Увеличиваем счетчик созданных заказов
+            if (_metricsService != null)
+            {
+                await _metricsService.IncrementMetricAsync("TotalOrdersCreated");
+            }
 
             _auditService.LogOperation(
                 userId: command.UserId,

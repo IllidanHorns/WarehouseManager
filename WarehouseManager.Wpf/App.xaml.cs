@@ -3,9 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
 using System.Windows;
+using ModernWpf;
 using WarehouseManager.Application.Services;
 using WarehouseManager.Core.Data;
+using WarehouseManager.Services.Services;
 using WarehouseManager.Services.Services.Interfaces;
+using WarehouseManager.Wpf.Helpers;
 using WarehouseManager.Wpf.View;
 using WarehouseManager.Wpf.ViewModels;
 
@@ -76,6 +79,9 @@ namespace WarehouseManager.Wpf
             services.AddTransient<MainWindowViewModel>();
 
             ServiceProvider = services.BuildServiceProvider();
+
+            var initialTheme = ThemeManager.Current.ActualApplicationTheme;
+            ThemeResourceHelper.ApplyTheme(initialTheme);
 
             var viewModel = ServiceProvider.GetRequiredService<AuthViewModel>();
             var authWindow = new AuthWindow(viewModel);

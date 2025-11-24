@@ -18,29 +18,24 @@
                 <TextBlock Text="Аналитика"
                            FontSize="28"
                            FontWeight="Bold"
+                           Foreground="#123C69"
                            Margin="0,0,0,10"/>
                 <TextBlock Text="Обновлённые сведения по складам, заказам и категориям"
                            FontSize="16"
                            Foreground="#666666"
-                           Margin="0,0,0,8"/>
+                           Margin="0,0,0,16"/>
+
+                <!-- Сообщение об ошибке -->
                 <TextBlock Text="{Binding ErrorMessage}"
-                           Foreground="Crimson">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Visibility" Value="Visible"/>
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                           Foreground="#AC3B61"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,16"
+                           Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"/>
+
+                <!-- Индикатор загрузки -->
                 <StackPanel Orientation="Horizontal"
-                            VerticalAlignment="Center">
+                            VerticalAlignment="Center"
+                            Margin="0,0,0,16">
                     <StackPanel.Style>
                         <Style TargetType="StackPanel">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -62,6 +57,7 @@
                         Orientation="Vertical"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top">
+                <!-- График запасов по складам -->
                 <Border Margin="0,0,0,20"
                         Padding="10"
                         Background="White"
@@ -69,9 +65,63 @@
                         BorderBrush="#DDD"
                         BorderThickness="1"
                         MinHeight="260">
-                    <oxy:PlotView Model="{Binding WarehouseStockPlot}"
-                                  Background="Transparent" />
+                    <StackPanel>
+                        <Border Background="#EEE2DC"
+                                CornerRadius="4"
+                                Padding="8"
+                                Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Склад:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedValue="{Binding SelectedWarehouseId}"
+                                          SelectedValuePath="Id"
+                                          DisplayMemberPath="Address"
+                                          ItemsSource="{Binding Warehouses}"
+                                          Width="200"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <Button Content="Обновить"
+                                        Command="{Binding ApplyFiltersCommand}"
+                                        Padding="12,6"
+                                        Margin="16,0,0,0"
+                                        Background="#123C69"
+                                        Foreground="#EEE2DC"
+                                        BorderBrush="#BAB2B5"
+                                        Cursor="Hand"
+                                        FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                        <oxy:PlotView Model="{Binding WarehouseStockPlot}"
+                                      Height="240"
+                                      Background="Transparent" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,12,0,0">
+                            <Button Content="В CSV"
+                                    Command="{Binding ExportCsvCommand}"
+                                    CommandParameter="WarehouseStock"
+                                    Margin="0,0,8,0"
+                                    Padding="10,6"
+                                    Background="#BAB2B5"
+                                    Foreground="#123C69"
+                                    BorderBrush="#8D8D8D"
+                                    Cursor="Hand"/>
+                            <Button Content="В PDF"
+                                    Command="{Binding ExportPdfCommand}"
+                                    CommandParameter="WarehouseStock"
+                                    Padding="10,6"
+                                    Background="#123C69"
+                                    Foreground="#EEE2DC"
+                                    BorderBrush="#BAB2B5"
+                                    Cursor="Hand"/>
+                        </StackPanel>
+                    </StackPanel>
                 </Border>
+                <!-- График статусов заказов -->
                 <Border Margin="0,0,0,20"
                         Padding="10"
                         Background="White"
@@ -79,9 +129,85 @@
                         BorderBrush="#DDD"
                         BorderThickness="1"
                         MinHeight="260">
-                    <oxy:PlotView Model="{Binding OrderStatusPlot}"
-                                  Background="Transparent" />
+                    <StackPanel>
+                        <Border Background="#EEE2DC"
+                                CornerRadius="4"
+                                Padding="8"
+                                Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Период:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding StartDate}"
+                                            Width="120"
+                                            Margin="0,0,8,0"
+                                            Background="#EDC7B7"
+                                            Foreground="#123C69"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"/>
+                                <TextBlock Text="по"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding EndDate}"
+                                            Width="120"
+                                            Margin="0,0,16,0"
+                                            Background="#EDC7B7"
+                                            Foreground="#123C69"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"/>
+                                <TextBlock Text="Статус:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedValue="{Binding SelectedOrderStatusId}"
+                                          SelectedValuePath="Id"
+                                          DisplayMemberPath="StatusName"
+                                          ItemsSource="{Binding OrderStatuses}"
+                                          Width="150"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <Button Content="Обновить"
+                                        Command="{Binding ApplyFiltersCommand}"
+                                        Padding="12,6"
+                                        Margin="16,0,0,0"
+                                        Background="#123C69"
+                                        Foreground="#EEE2DC"
+                                        BorderBrush="#BAB2B5"
+                                        Cursor="Hand"
+                                        FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                        <oxy:PlotView Model="{Binding OrderStatusPlot}"
+                                      Height="240"
+                                      Background="Transparent" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,12,0,0">
+                            <Button Content="В CSV"
+                                    Command="{Binding ExportCsvCommand}"
+                                    CommandParameter="OrderStatus"
+                                    Margin="0,0,8,0"
+                                    Padding="10,6"
+                                    Background="#BAB2B5"
+                                    Foreground="#123C69"
+                                    BorderBrush="#8D8D8D"
+                                    Cursor="Hand"/>
+                            <Button Content="В PDF"
+                                    Command="{Binding ExportPdfCommand}"
+                                    CommandParameter="OrderStatus"
+                                    Padding="10,6"
+                                    Background="#123C69"
+                                    Foreground="#EEE2DC"
+                                    BorderBrush="#BAB2B5"
+                                    Cursor="Hand"/>
+                        </StackPanel>
+                    </StackPanel>
                 </Border>
+                <!-- График товаров по категориям -->
                 <Border Margin="0,0,0,20"
                         Padding="10"
                         Background="White"
@@ -89,9 +215,63 @@
                         BorderBrush="#DDD"
                         BorderThickness="1"
                         MinHeight="260">
-                    <oxy:PlotView Model="{Binding CategoryProductCountPlot}"
-                                  Background="Transparent" />
+                    <StackPanel>
+                        <Border Background="#EEE2DC"
+                                CornerRadius="4"
+                                Padding="8"
+                                Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Категория:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedValue="{Binding SelectedCategoryId}"
+                                          SelectedValuePath="Id"
+                                          DisplayMemberPath="Name"
+                                          ItemsSource="{Binding Categories}"
+                                          Width="200"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <Button Content="Обновить"
+                                        Command="{Binding ApplyFiltersCommand}"
+                                        Padding="12,6"
+                                        Margin="16,0,0,0"
+                                        Background="#123C69"
+                                        Foreground="#EEE2DC"
+                                        BorderBrush="#BAB2B5"
+                                        Cursor="Hand"
+                                        FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                        <oxy:PlotView Model="{Binding CategoryProductCountPlot}"
+                                      Height="240"
+                                      Background="Transparent" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,12,0,0">
+                            <Button Content="В CSV"
+                                    Command="{Binding ExportCsvCommand}"
+                                    CommandParameter="CategoryProductCount"
+                                    Margin="0,0,8,0"
+                                    Padding="10,6"
+                                    Background="#BAB2B5"
+                                    Foreground="#123C69"
+                                    BorderBrush="#8D8D8D"
+                                    Cursor="Hand"/>
+                            <Button Content="В PDF"
+                                    Command="{Binding ExportPdfCommand}"
+                                    CommandParameter="CategoryProductCount"
+                                    Padding="10,6"
+                                    Background="#123C69"
+                                    Foreground="#EEE2DC"
+                                    BorderBrush="#BAB2B5"
+                                    Cursor="Hand"/>
+                        </StackPanel>
+                    </StackPanel>
                 </Border>
+                <!-- График выручки по месяцам -->
                 <Border Margin="0,0,0,20"
                         Padding="10"
                         Background="White"
@@ -99,9 +279,61 @@
                         BorderBrush="#DDD"
                         BorderThickness="1"
                         MinHeight="280">
-                    <oxy:PlotView Model="{Binding MonthlyRevenuePlot}"
-                                  Background="Transparent" />
+                    <StackPanel>
+                        <Border Background="#EEE2DC"
+                                CornerRadius="4"
+                                Padding="8"
+                                Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Год:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedItem="{Binding SelectedYear}"
+                                          ItemsSource="{Binding AvailableYears}"
+                                          Width="100"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <Button Content="Обновить"
+                                        Command="{Binding ApplyFiltersCommand}"
+                                        Padding="12,6"
+                                        Margin="16,0,0,0"
+                                        Background="#123C69"
+                                        Foreground="#EEE2DC"
+                                        BorderBrush="#BAB2B5"
+                                        Cursor="Hand"
+                                        FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                        <oxy:PlotView Model="{Binding MonthlyRevenuePlot}"
+                                      Height="240"
+                                      Background="Transparent" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,12,0,0">
+                            <Button Content="В CSV"
+                                    Command="{Binding ExportCsvCommand}"
+                                    CommandParameter="MonthlyRevenue"
+                                    Margin="0,0,8,0"
+                                    Padding="10,6"
+                                    Background="#BAB2B5"
+                                    Foreground="#123C69"
+                                    BorderBrush="#8D8D8D"
+                                    Cursor="Hand"/>
+                            <Button Content="В PDF"
+                                    Command="{Binding ExportPdfCommand}"
+                                    CommandParameter="MonthlyRevenue"
+                                    Padding="10,6"
+                                    Background="#123C69"
+                                    Foreground="#EEE2DC"
+                                    BorderBrush="#BAB2B5"
+                                    Cursor="Hand"/>
+                        </StackPanel>
+                    </StackPanel>
                 </Border>
+                <!-- График топ категорий по выручке -->
                 <Border Margin="0,0,0,20"
                         Padding="10"
                         Background="White"
@@ -109,9 +341,97 @@
                         BorderBrush="#DDD"
                         BorderThickness="1"
                         MinHeight="260">
-                    <oxy:PlotView Model="{Binding TopCategoryRevenuePlot}"
-                                  Background="Transparent" />
+                    <StackPanel>
+                        <Border Background="#EEE2DC"
+                                CornerRadius="4"
+                                Padding="8"
+                                Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Период:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding StartDate}"
+                                            Width="120"
+                                            Margin="0,0,8,0"
+                                            Background="#EDC7B7"
+                                            Foreground="#123C69"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"/>
+                                <TextBlock Text="по"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding EndDate}"
+                                            Width="120"
+                                            Margin="0,0,16,0"
+                                            Background="#EDC7B7"
+                                            Foreground="#123C69"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"/>
+                                <TextBlock Text="Категория:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedValue="{Binding SelectedCategoryId}"
+                                          SelectedValuePath="Id"
+                                          DisplayMemberPath="Name"
+                                          ItemsSource="{Binding Categories}"
+                                          Width="150"
+                                          Margin="0,0,16,0"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <TextBlock Text="Топ:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedItem="{Binding TopCount}"
+                                          ItemsSource="{Binding AvailableTopCounts}"
+                                          Width="80"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <Button Content="Обновить"
+                                        Command="{Binding ApplyFiltersCommand}"
+                                        Padding="12,6"
+                                        Margin="16,0,0,0"
+                                        Background="#123C69"
+                                        Foreground="#EEE2DC"
+                                        BorderBrush="#BAB2B5"
+                                        Cursor="Hand"
+                                        FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                        <oxy:PlotView Model="{Binding TopCategoryRevenuePlot}"
+                                      Height="240"
+                                      Background="Transparent" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,12,0,0">
+                            <Button Content="В CSV"
+                                    Command="{Binding ExportCsvCommand}"
+                                    CommandParameter="TopCategoryRevenue"
+                                    Margin="0,0,8,0"
+                                    Padding="10,6"
+                                    Background="#BAB2B5"
+                                    Foreground="#123C69"
+                                    BorderBrush="#8D8D8D"
+                                    Cursor="Hand"/>
+                            <Button Content="В PDF"
+                                    Command="{Binding ExportPdfCommand}"
+                                    CommandParameter="TopCategoryRevenue"
+                                    Padding="10,6"
+                                    Background="#123C69"
+                                    Foreground="#EEE2DC"
+                                    BorderBrush="#BAB2B5"
+                                    Cursor="Hand"/>
+                        </StackPanel>
+                    </StackPanel>
                 </Border>
+                <!-- График производительности сотрудников -->
                 <Border Margin="0,0,0,20"
                         Padding="10"
                         Background="White"
@@ -119,8 +439,81 @@
                         BorderBrush="#DDD"
                         BorderThickness="1"
                         MinHeight="260">
-                    <oxy:PlotView Model="{Binding EmployeePerformancePlot}"
-                                  Background="Transparent" />
+                    <StackPanel>
+                        <Border Background="#EEE2DC"
+                                CornerRadius="4"
+                                Padding="8"
+                                Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Период:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding StartDate}"
+                                            Width="120"
+                                            Margin="0,0,8,0"
+                                            Background="#EDC7B7"
+                                            Foreground="#123C69"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"/>
+                                <TextBlock Text="по"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding EndDate}"
+                                            Width="120"
+                                            Margin="0,0,16,0"
+                                            Background="#EDC7B7"
+                                            Foreground="#123C69"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"/>
+                                <TextBlock Text="Топ:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedItem="{Binding TopCount}"
+                                          ItemsSource="{Binding AvailableTopCounts}"
+                                          Width="80"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <Button Content="Обновить"
+                                        Command="{Binding ApplyFiltersCommand}"
+                                        Padding="12,6"
+                                        Margin="16,0,0,0"
+                                        Background="#123C69"
+                                        Foreground="#EEE2DC"
+                                        BorderBrush="#BAB2B5"
+                                        Cursor="Hand"
+                                        FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                        <oxy:PlotView Model="{Binding EmployeePerformancePlot}"
+                                      Height="240"
+                                      Background="Transparent" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,12,0,0">
+                            <Button Content="В CSV"
+                                    Command="{Binding ExportCsvCommand}"
+                                    CommandParameter="EmployeePerformance"
+                                    Margin="0,0,8,0"
+                                    Padding="10,6"
+                                    Background="#BAB2B5"
+                                    Foreground="#123C69"
+                                    BorderBrush="#8D8D8D"
+                                    Cursor="Hand"/>
+                            <Button Content="В PDF"
+                                    Command="{Binding ExportPdfCommand}"
+                                    CommandParameter="EmployeePerformance"
+                                    Padding="10,6"
+                                    Background="#123C69"
+                                    Foreground="#EEE2DC"
+                                    BorderBrush="#BAB2B5"
+                                    Cursor="Hand"/>
+                        </StackPanel>
+                    </StackPanel>
                 </Border>
 
                 <Border Margin="0,0,0,20"
@@ -130,6 +523,69 @@
                         BorderBrush="#DDD"
                         BorderThickness="1">
                     <StackPanel>
+                        <Border Background="#EEE2DC"
+                                CornerRadius="4"
+                                Padding="8"
+                                Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Период:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding StartDate}"
+                                            Width="120"
+                                            Margin="0,0,8,0"
+                                            Background="#EDC7B7"
+                                            Foreground="#123C69"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"/>
+                                <TextBlock Text="по"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding EndDate}"
+                                            Width="120"
+                                            Margin="0,0,16,0"
+                                            Background="#EDC7B7"
+                                            Foreground="#123C69"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"/>
+                                <TextBlock Text="Категория:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedValue="{Binding SelectedCategoryId}"
+                                          SelectedValuePath="Id"
+                                          DisplayMemberPath="Name"
+                                          ItemsSource="{Binding Categories}"
+                                          Width="150"
+                                          Margin="0,0,16,0"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <TextBlock Text="Топ:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedItem="{Binding TopCount}"
+                                          ItemsSource="{Binding AvailableTopCounts}"
+                                          Width="80"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <Button Content="Обновить"
+                                        Command="{Binding ApplyFiltersCommand}"
+                                        Padding="12,6"
+                                        Margin="16,0,0,0"
+                                        Background="#123C69"
+                                        Foreground="#EEE2DC"
+                                        BorderBrush="#BAB2B5"
+                                        Cursor="Hand"
+                                        FontSize="12"/>
+                            </StackPanel>
+                        </Border>
                         <TextBlock Text="Топ категорий (выручка и продажи)"
                                    FontSize="18"
                                    FontWeight="SemiBold"
@@ -178,6 +634,57 @@
                         BorderBrush="#DDD"
                         BorderThickness="1">
                     <StackPanel>
+                        <Border Background="#EEE2DC"
+                                CornerRadius="4"
+                                Padding="8"
+                                Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Период:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding StartDate}"
+                                            Width="120"
+                                            Margin="0,0,8,0"
+                                            Background="#EDC7B7"
+                                            Foreground="#123C69"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"/>
+                                <TextBlock Text="по"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding EndDate}"
+                                            Width="120"
+                                            Margin="0,0,16,0"
+                                            Background="#EDC7B7"
+                                            Foreground="#123C69"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"/>
+                                <TextBlock Text="Склад:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedValue="{Binding SelectedWarehouseId}"
+                                          SelectedValuePath="Id"
+                                          DisplayMemberPath="Address"
+                                          ItemsSource="{Binding Warehouses}"
+                                          Width="200"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <Button Content="Обновить"
+                                        Command="{Binding ApplyFiltersCommand}"
+                                        Padding="12,6"
+                                        Margin="16,0,0,0"
+                                        Background="#123C69"
+                                        Foreground="#EEE2DC"
+                                        BorderBrush="#BAB2B5"
+                                        Cursor="Hand"
+                                        FontSize="12"/>
+                            </StackPanel>
+                        </Border>
                         <TextBlock Text="Статистика выполнения заказов по складам"
                                    FontSize="18"
                                    FontWeight="SemiBold"
@@ -229,6 +736,55 @@
                         BorderBrush="#DDD"
                         BorderThickness="1">
                     <StackPanel>
+                        <Border Background="#EEE2DC"
+                                CornerRadius="4"
+                                Padding="8"
+                                Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Период:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding StartDate}"
+                                            Width="120"
+                                            Margin="0,0,8,0"
+                                            Background="#EDC7B7"
+                                            Foreground="#123C69"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"/>
+                                <TextBlock Text="по"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <DatePicker SelectedDate="{Binding EndDate}"
+                                            Width="120"
+                                            Margin="0,0,16,0"
+                                            Background="#EDC7B7"
+                                            Foreground="#123C69"
+                                            BorderBrush="#BAB2B5"
+                                            BorderThickness="1"/>
+                                <TextBlock Text="Топ:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedItem="{Binding TopCount}"
+                                          ItemsSource="{Binding AvailableTopCounts}"
+                                          Width="80"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <Button Content="Обновить"
+                                        Command="{Binding ApplyFiltersCommand}"
+                                        Padding="12,6"
+                                        Margin="16,0,0,0"
+                                        Background="#123C69"
+                                        Foreground="#EEE2DC"
+                                        BorderBrush="#BAB2B5"
+                                        Cursor="Hand"
+                                        FontSize="12"/>
+                            </StackPanel>
+                        </Border>
                         <TextBlock Text="Показатели сотрудников"
                                    FontSize="18"
                                    FontWeight="SemiBold"
@@ -278,6 +834,35 @@
                         BorderBrush="#DDD"
                         BorderThickness="1">
                     <StackPanel>
+                        <Border Background="#EEE2DC"
+                                CornerRadius="4"
+                                Padding="8"
+                                Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Категория:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedValue="{Binding SelectedCategoryId}"
+                                          SelectedValuePath="Id"
+                                          DisplayMemberPath="Name"
+                                          ItemsSource="{Binding Categories}"
+                                          Width="200"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <Button Content="Обновить"
+                                        Command="{Binding ApplyFiltersCommand}"
+                                        Padding="12,6"
+                                        Margin="16,0,0,0"
+                                        Background="#123C69"
+                                        Foreground="#EEE2DC"
+                                        BorderBrush="#BAB2B5"
+                                        Cursor="Hand"
+                                        FontSize="12"/>
+                            </StackPanel>
+                        </Border>
                         <TextBlock Text="Статистика цен по категориям"
                                    FontSize="18"
                                    FontWeight="SemiBold"
@@ -328,6 +913,35 @@
                         BorderBrush="#DDD"
                         BorderThickness="1">
                     <StackPanel>
+                        <Border Background="#EEE2DC"
+                                CornerRadius="4"
+                                Padding="8"
+                                Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Склад:"
+                                           Foreground="#123C69"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <ComboBox SelectedValue="{Binding SelectedWarehouseId}"
+                                          SelectedValuePath="Id"
+                                          DisplayMemberPath="Address"
+                                          ItemsSource="{Binding Warehouses}"
+                                          Width="200"
+                                          Background="#EDC7B7"
+                                          Foreground="#123C69"
+                                          BorderBrush="#BAB2B5"
+                                          BorderThickness="1"/>
+                                <Button Content="Обновить"
+                                        Command="{Binding ApplyFiltersCommand}"
+                                        Padding="12,6"
+                                        Margin="16,0,0,0"
+                                        Background="#123C69"
+                                        Foreground="#EEE2DC"
+                                        BorderBrush="#BAB2B5"
+                                        Cursor="Hand"
+                                        FontSize="12"/>
+                            </StackPanel>
+                        </Border>
                         <TextBlock Text="Детализация по складам"
                                    FontSize="18"
                                    FontWeight="SemiBold"

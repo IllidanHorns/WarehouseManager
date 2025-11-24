@@ -5,6 +5,9 @@ using WarehouseManagerContracts.DTOs.Product;
 
 namespace WarehouseManagerApi.Controllers
 {
+    /// <summary>
+    /// Управляет товарами каталога.
+    /// </summary>
     [Route("api/[controller]")]
     public class ProductsController : ApiControllerBase
     {
@@ -15,6 +18,10 @@ namespace WarehouseManagerApi.Controllers
             _productService = productService;
         }
 
+        /// <summary>
+        /// Возвращает список товаров с фильтрами.
+        /// </summary>
+        /// <param name="filter">Параметры фильтра и пагинации.</param>
         [HttpGet]
         public async Task<IActionResult> GetProducts([FromQuery] ProductsFilters filter)
         {
@@ -22,6 +29,10 @@ namespace WarehouseManagerApi.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Возвращает товар по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор товара.</param>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetProduct(int id)
         {
@@ -36,6 +47,10 @@ namespace WarehouseManagerApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Создаёт новый товар.
+        /// </summary>
+        /// <param name="command">Данные нового товара.</param>
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command)
         {
@@ -50,6 +65,11 @@ namespace WarehouseManagerApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Обновляет сведения о товаре.
+        /// </summary>
+        /// <param name="id">Идентификатор товара.</param>
+        /// <param name="command">Изменяемые параметры.</param>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductCommand command)
         {
@@ -65,6 +85,11 @@ namespace WarehouseManagerApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Архивирует товар.
+        /// </summary>
+        /// <param name="id">Идентификатор товара.</param>
+        /// <param name="userId">Пользователь, выполняющий операцию.</param>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> ArchiveProduct(int id, [FromQuery] int userId)
         {

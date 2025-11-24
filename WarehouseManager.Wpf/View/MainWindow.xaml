@@ -10,21 +10,58 @@
         Width="1200"
         Height="800"
         WindowStartupLocation="CenterScreen"
-        Background="#EDC7B7">
+        Background="{DynamicResource SurfaceBrush}">
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Control" Command="{x:Static local:MainWindow.CreateItemCommand}"/>
+        <KeyBinding Key="E" Modifiers="Control" Command="{x:Static local:MainWindow.EditItemCommand}"/>
+        <KeyBinding Key="D" Modifiers="Control" Command="{x:Static local:MainWindow.DeleteItemCommand}"/>
+        <KeyBinding Key="R" Modifiers="Control" Command="{x:Static local:MainWindow.RefreshCommand}"/>
+        <KeyBinding Key="F" Modifiers="Control" Command="{x:Static local:MainWindow.FocusFilterCommand}"/>
+        <KeyBinding Key="P" Modifiers="Control" Command="{x:Static local:MainWindow.ToggleNavigationCommand}"/>
+        <KeyBinding Key="T" Modifiers="Control" Command="{x:Static local:MainWindow.ToggleThemeCommand}"/>
+        <KeyBinding Key="L" Modifiers="Control" Command="{x:Static local:MainWindow.LogoutCommand}"/>
+        <KeyBinding Key="Up" Modifiers="Control" Command="{x:Static local:MainWindow.NavigatePrevCommand}"/>
+        <KeyBinding Key="Down" Modifiers="Control" Command="{x:Static local:MainWindow.NavigateNextCommand}"/>
+    </Window.InputBindings>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Кабина верхних кнопок -->
+        <StackPanel Grid.Row="0"
+                    Grid.Column="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,8,8,0">
+            <Button Command="{Binding ToggleThemeCommand}"
+                    Content="{Binding ThemeToggleLabel}"
+                    Padding="12,6"
+                    Margin="0,0,8,0"
+                    Background="{DynamicResource PanelBrush}"
+                    Foreground="{DynamicResource PrimaryTextBrush}"
+                    BorderBrush="{DynamicResource SecondaryTextBrush}"
+                    BorderThickness="1"
+                    Cursor="Hand"
+                    FontSize="12"
+                    MinWidth="100"
+                    ToolTip="Переключить светлую/тёмную тему"/>
+        </StackPanel>
+
         <!-- Основной контент -->
-        <Grid x:Name="MainGrid" Grid.Column="0">
+        <Grid x:Name="MainGrid" Grid.RowSpan="2" Grid.Column="0">
         </Grid>
 
         <!-- Панель навигации справа -->
-        <Border Grid.Column="1"
-                Background="#EEE2DC"
-                BorderBrush="#BAB2B5"
+        <Border Grid.Row="1"
+                Grid.Column="1"
+                Background="{DynamicResource PanelBrush}"
+                BorderBrush="{DynamicResource BorderBrushBase}"
                 BorderThickness="1,0,0,0"
                 Width="250"
                 Visibility="{Binding IsNavigationVisible, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -36,7 +73,7 @@
 
                 <!-- Заголовок панели навигации -->
                 <Border Grid.Row="0"
-                        Background="#123C69"
+                        Background="{DynamicResource AccentBrush}"
                         Padding="12,12,40,12">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -45,7 +82,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Навигация"
                                    Grid.Column="0"
-                                   Foreground="#EEE2DC"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
                                    FontSize="16"
                                    FontWeight="Bold"
                                    VerticalAlignment="Center"/>
@@ -54,32 +91,14 @@
                                 Content="Выход"
                                 Padding="12,6"
                                 Margin="8,0,0,0"
-                                Background="#AC3B61"
-                                Foreground="#EEE2DC"
-                                BorderBrush="#BAB2B5"
+                                Background="{DynamicResource AccentSecondaryBrush}"
+                                Foreground="{DynamicResource SecondaryTextBrush}"
+                                BorderBrush="{DynamicResource BorderBrushBase}"
                                 BorderThickness="1"
                                 Cursor="Hand"
                                 FontSize="12"
                                 MinWidth="60"
                                 ToolTip="Выйти из аккаунта">
-                            <Button.Triggers>
-                                <EventTrigger RoutedEvent="MouseEnter">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
-                                                            To="#C42D4D" Duration="0:0:0.2"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                                <EventTrigger RoutedEvent="MouseLeave">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
-                                                            To="#AC3B61" Duration="0:0:0.2"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </Button.Triggers>
                         </Button>
                     </Grid>
                 </Border>
@@ -93,13 +112,13 @@
                          Padding="8">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="#EDC7B7"
+                            <Border Background="{DynamicResource CardBrush}"
                                     CornerRadius="4"
                                     Padding="12,8"
                                     Margin="0,4,0,0"
                                     Cursor="Hand">
                                 <TextBlock Text="{Binding Name}"
-                                           Foreground="#123C69"
+                                           Foreground="{DynamicResource PrimaryTextBrush}"
                                            FontSize="14"/>
                             </Border>
                         </DataTemplate>
@@ -117,19 +136,19 @@
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsSelected" Value="True">
-                                                <Setter TargetName="Bd" Property="Background" Value="#AC3B61"/>
+                                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
                                             </Trigger>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Bd" Property="Background" Value="#C42D4D"/>
+                                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentHoverBrush}"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
-                            <Setter Property="Foreground" Value="#123C69"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="#EEE2DC"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -139,16 +158,17 @@
         </Border>
 
         <!-- Кнопка скрытия/показа навигации - всегда видна -->
-        <Button Grid.Column="1"
+        <Button Grid.Row="1"
+                Grid.Column="1"
                 Command="{Binding ToggleNavigationCommand}"
                 Width="30"
                 Height="30"
                 Margin="4,8,4,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Background="#123C69"
-                Foreground="#EEE2DC"
-                BorderBrush="#BAB2B5"
+                Background="{DynamicResource AccentBrush}"
+                Foreground="{DynamicResource SecondaryTextBrush}"
+                BorderBrush="{DynamicResource BorderBrushBase}"
                 BorderThickness="1"
                 Cursor="Hand"
                 FontSize="12"

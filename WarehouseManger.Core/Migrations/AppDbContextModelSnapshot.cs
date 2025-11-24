@@ -36,6 +36,39 @@ namespace WarehouseManagerApi.Migrations
                     b.ToView("OrderStatusDistribution", (string)null);
                 });
 
+            modelBuilder.Entity("WarehouseManager.Core.Models.ApplicationMetric", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("MetricName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MetricName")
+                        .IsUnique();
+
+                    b.ToTable("ApplicationMetrics");
+                });
+
             modelBuilder.Entity("WarehouseManager.Core.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -206,9 +239,6 @@ namespace WarehouseManagerApi.Migrations
                     b.Property<int?>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EmployeeId1")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsArchived")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -218,8 +248,8 @@ namespace WarehouseManagerApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
-                        .HasPrecision(12, 2)
-                        .HasColumnType("decimal(12,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("UpdateDatetime")
                         .HasColumnType("datetime2");
@@ -234,15 +264,18 @@ namespace WarehouseManagerApi.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("EmployeeId1");
-
                     b.HasIndex("StatusId");
 
                     b.HasIndex("UserId");
 
                     b.HasIndex("WarehouseId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", t =>
+                        {
+                            t.HasTrigger("TR_Orders_AuditChanges");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("WarehouseManager.Core.Models.OrderStatus", b =>
@@ -409,7 +442,12 @@ namespace WarehouseManagerApi.Migrations
                     b.HasIndex("ProductName")
                         .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", t =>
+                        {
+                            t.HasTrigger("TR_Product_InsertPriceHistory");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("WarehouseManager.Core.Models.Remaining", b =>
@@ -433,9 +471,6 @@ namespace WarehouseManagerApi.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductId1")
-                        .HasColumnType("int");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -449,11 +484,14 @@ namespace WarehouseManagerApi.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("ProductId1");
-
                     b.HasIndex("WarehouseId");
 
-                    b.ToTable("Remaining");
+                    b.ToTable("Remaining", t =>
+                        {
+                            t.HasTrigger("TR_Remaining_CheckQuantity");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("WarehouseManager.Core.Models.Role", b =>
@@ -610,6 +648,95 @@ namespace WarehouseManagerApi.Migrations
                     b.ToView("CategoryProductCount", (string)null);
                 });
 
+            modelBuilder.Entity("WarehouseManager.Core.ViewDTOs.EmployeePerformanceDto", b =>
+                {
+                    b.Property<int>("AssignedOrders")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("AvgProcessingHours")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmployeeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalRevenue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.ToTable((string)null);
+
+                    b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("WarehouseManager.Core.ViewDTOs.MonthlyRevenueTrendDto", b =>
+                {
+                    b.Property<string>("MonthName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MonthNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderCount")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalRevenue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.ToTable((string)null);
+
+                    b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("WarehouseManager.Core.ViewDTOs.TopCategoryRevenueDto", b =>
+                {
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalRevenue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TotalUnits")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("WarehouseManager.Core.ViewDTOs.WarehouseOrderStatsDto", b =>
+                {
+                    b.Property<int>("ActiveOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CancelledOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompletedOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalOrders")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalRevenue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("WarehouseAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView(null, (string)null);
+                });
+
             modelBuilder.Entity("WarehouseManager.Core.ViewDTOs.WarehouseStockDto", b =>
                 {
                     b.Property<decimal>("TotalValue")
@@ -668,13 +795,9 @@ namespace WarehouseManagerApi.Migrations
             modelBuilder.Entity("WarehouseManager.Core.Models.Order", b =>
                 {
                     b.HasOne("WarehouseManager.Core.Models.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("WarehouseManager.Core.Models.Employee", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("EmployeeId1");
 
                     b.HasOne("WarehouseManager.Core.Models.OrderStatus", "OrderStatus")
                         .WithMany("Orders")
@@ -747,14 +870,10 @@ namespace WarehouseManagerApi.Migrations
             modelBuilder.Entity("WarehouseManager.Core.Models.Remaining", b =>
                 {
                     b.HasOne("WarehouseManager.Core.Models.Product", "Product")
-                        .WithMany()
+                        .WithMany("Remainings")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("WarehouseManager.Core.Models.Product", null)
-                        .WithMany("Remainings")
-                        .HasForeignKey("ProductId1");
 
                     b.HasOne("WarehouseManager.Core.Models.Warehouse", "Warehouse")
                         .WithMany("Remaining")

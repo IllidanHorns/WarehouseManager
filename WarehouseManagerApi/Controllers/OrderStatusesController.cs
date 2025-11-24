@@ -5,6 +5,9 @@ using WarehouseManagerContracts.DTOs.OrderStatus;
 
 namespace WarehouseManagerApi.Controllers;
 
+/// <summary>
+/// Предоставляет справочник статусов заказов.
+/// </summary>
 [Route("api/[controller]")]
 public class OrderStatusesController : ControllerBase
 {
@@ -15,6 +18,10 @@ public class OrderStatusesController : ControllerBase
         _context = context;
     }
 
+    /// <summary>
+    /// Возвращает список статусов заказов.
+    /// </summary>
+    /// <param name="includeArchived">Определяет, нужно ли включать архивные статусы.</param>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<OrderStatusDto>>> GetStatuses([FromQuery] bool includeArchived = false)
     {
